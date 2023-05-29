@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<body>
+<header th:replace="layout/layout :: header"></header>
+<div class="container py-4">
+  <div class="card border-primary text-center">
+    <div class="card-header">El recurso no existe</div>
+    <div class="card-body">
+      <div >La pagina o recurso [<span th:text="${path}"></span>] no existe.</div>
+    </div>
+  </div>
+</div>
+<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head"></head>
+
+<body class="body-bg">
+<header th:replace="layout/layout :: header"></header>
+
+
+<div class="container py-5 my-5 shadow-lg rounded bg-sicmys">
+    <div sec:authorize="hasAnyRole('ROLE_MANAGER','ROLE_AREAHEAD')" id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="3" aria-label="Slide 4"></button>
+            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="4" aria-label="Slide 5"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active" data-bs-interval="5000">
+                <div class="d-flex align-items-center ms-5">
+                    <div class="d-flex flex-column justify-content-center">
+                        <h1 class="fst-italic fw-bold">Gestión de Empleados</h1>
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-sicmys" data-bs-toggle="modal" data-bs-target="#basculasModal" style="background-color: #1c3852; color: #b6d4fe">
+                                Ingresar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <img th:src="@{/images/employees_img.webp}" alt="bascula" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item" data-bs-interval="5000">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 ms-3">
+                        <img th:src="@{/images/area_img.webp}" alt="bascula" class="img-fluid">
+                    </div>
+                    <div class="d-flex flex-column justify-content-center">
+                        <h1 class="fst-italic fw-bold">Gestión de Áreas</h1>
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-sicmys" data-bs-toggle="modal" data-bs-target="#masasModal" style="background-color: #1c3852; color: #b6d4fe">
+                                Ingresar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="d-flex align-items-center ms-5">
+                    <div class="d-flex flex-column justify-content-center">
+                        <img th:src="@{/images/presion-titulo.png}" alt="bascula" class="img-fluid ms-5">
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-sicmys" data-bs-toggle="modal" data-bs-target="#presionModal" style="background-color: #1c3852; color: #b6d4fe">
+                                Ingresar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <img th:src="@{/images/manometro.png}" alt="bascula" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item" data-bs-interval="5000">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 ms-3">
+                        <img th:src="@{/images/esfigmo.png}" alt="bascula" class="img-fluid">
+                    </div>
+                    <div class="d-flex flex-column justify-content-center">
+                        <img th:src="@{/images/titulo-esfigmo.png}" alt="bascula" class="img-fluid">
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-sicmys" data-bs-toggle="modal" data-bs-target="#presionEsfigmoModal" style="background-color: #1c3852; color: #b6d4fe">
+                                Ingresar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-item" data-bs-interval="5000">
+                <div class="d-flex align-items-center ms-5">
+                    <div class="d-flex flex-column justify-content-center">
+                        <img th:src="@{/images/termometros-titulo.png}" alt="bascula" class="img-fluid ms-5">
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-sicmys" data-bs-toggle="modal" data-bs-target="#termoModal" style="background-color: #1c3852; color: #b6d4fe">
+                                Ingresar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <img th:src="@{/images/termometro.png}" alt="bascula" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
+
+<!--opciones basculas-->
+<div class="modal fade" id="basculasModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="basculasModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #1c3852">
+                <h5 class="modal-title" id="basculasModalLabel" style="color: #b6d4fe">Opciones Masa-IPFNA</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="background-color: #b6d4fe">
+                <div class="container py-1 shadow-lg rounded" style="background-color: #ceddf6"> hola</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

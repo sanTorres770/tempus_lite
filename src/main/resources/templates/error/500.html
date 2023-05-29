@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<body>
+<header th:replace="layout/layout :: header"></header>
+<div class="container py-4">
+  <div class="card border-primary text-center">
+    <div class="card-header">Ha ocurrido un error del sistema</div>
+    <div class="card-body">
+        <div th:text="${error}"></div>
+        <div th:text="${messages}"></div>
+        <div th:text="${status}"></div>
+    </div>
+  </div>
+</div>
+<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>
