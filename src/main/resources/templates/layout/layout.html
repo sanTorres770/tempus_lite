@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title th:text="'TEMPUS'"></title>
+    <link rel="icon" th:href="@{/images/logo.png}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" type="text/css"/>
+    <link th:href="@{/css/jquery-ui.min.css}" th:rel="stylesheet"/>
+    <link th:href="@{/css/jquery.steps.css}" th:rel="stylesheet"/>
+    <link th:href="@{/css/other-app-styles.css}" th:rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Krub:wght@400;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+</head>
+<body>
+<header th:fragment="header">
+
+   <div th:include="layout/nav"></div>
+
+    <div class="alert alert-success animate__animated animate__fadeIn" th:if="${success != null}" th:text="${success}"></div>
+    <div class="alert alert-danger animate__animated animate__fadeIn" th:if="${error != null}" th:text="${error}"></div>
+    <div class="alert alert-warning animate__animated animate__fadeIn" th:if="${warning != null}" th:text="${warning}"></div>
+    <div class="alert alert-info animate__animated animate__fadeIn" th:if="${info != null}" th:text="${info}"></div>
+
+</header>
+
+<footer th:fragment="footer" class="footer mt-5-auto py-5">
+    <div class="text-center align-self-center">
+        <a th:href="@{/}"><img alt="im1" width="120px" height="120px" th:src="@{/images/logo.png}"></a>
+        <p class="my-0 text-muted">TEMPUS</p>
+        <p class="my-0 text-muted">Santiago Torres</p>
+        <p class="my-0 text-muted">© 2023</p>
+    </div>
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</footer>
+</body>
+</html>

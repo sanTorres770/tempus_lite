@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body>
+<nav th:fragment="nav" class="navbar navbar-expand-lg navbar-light" style="background-color: #4c5669">
+    <div class="container-fluid">
+        <a class="navbar-brand text-wrap text-center" th:href="@{/}">
+            <img alt="im1" height="40rem" th:src="@{/images/logo.png}" class="animate__animated animate__zoomInUp">
+            <span class="fst-italic animate__animated animate__zoomInUp" style="color: #b6d4fe">TEMPUS</span>
+        </a>
+        <div class="collapse navbar-collapse justify-content-around" id="navbarToggleExternalContent">
+            <ul class="navbar-nav">
+                <li sec:authorize="hasRole('ROLE_MANAGER')" class="nav-item dropdown me-5">
+                    <a class="nav-link dropdown-toggle" id="dropdownIPFNA" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #b6d4fe; font-weight: bold">
+                        GESTION DE EMPLEADOS
+                    </a>
+                    <ul class="dropdown-menu  animate__animated animate__fadeInDown animate__faster dropdown-bg" aria-labelledby="dropdownIPFNA">
+                        <li><a class="dropdown-item fw-bold" th:href="@{'/employee/form'}">Crear nuevo empleado</a></li>
+                        <li ><a class="dropdown-item fw-bold" th:href="@{'/employee/all'}">Listar todos los empleados</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown me-5">
+                    <a class="nav-link dropdown-toggle" id="dropdownPESAS" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #b6d4fe; font-weight: bold">
+                        PESAS
+                    </a>
+                    <ul class="dropdown-menu  animate__animated animate__fadeInDown animate__faster dropdown-bg" aria-labelledby="dropdownPESAS">
+                        <li><a class="dropdown-item fw-bold" th:href="@{'/masses/wizard'}">Ingresar nueva toma de datos</a></li>
+                        <li><a class="dropdown-item fw-bold" th:href="@{'/masses/finish/list'}">Finalizar pendientes</a></li>
+                        <li><a class="dropdown-item fw-bold" th:href="@{'/certificates/masses/pre-registered'}">Revisar finalizados</a></li>
+                        <li sec:authorize="hasRole('ROLE_DIRECTOR')"><a class="dropdown-item fw-bold" th:href="@{'/certificates/masses/to-generate'}">Certificados Por Generar</a></li>
+                        <li sec:authorize="hasRole('ROLE_DIRECTOR')"><a class="dropdown-item fw-bold" th:href="@{'/certificates/masses/generated'}">Certificados Generados</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown me-5">
+                    <a class="nav-link dropdown-toggle" id="dropdownMANOMETROS" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #b6d4fe; font-weight: bold">
+                        MANÓMETROS
+                    </a>
+                    <ul class="dropdown-menu  animate__animated animate__fadeInDown animate__faster dropdown-bg" aria-labelledby="dropdownMANOMETROS">
+                        <li><a class="dropdown-item fw-bold" th:href="@{'/pressure/wizard'}">Ingresar nueva toma de datos</a></li>
+                        <li><a class="dropdown-item fw-bold" th:href="@{'/pressure/finish/list'}">Finalizar pendientes</a></li>
+                        <li><a class="dropdown-item fw-bold" th:href="@{'/certificates/pressure/pre-registered'}">Revisar finalizados</a></li>
+                        <li sec:authorize="hasRole('ROLE_DIRECTOR')"><a class="dropdown-item fw-bold" th:href="@{'/certificates/pressure/to-generate'}">Certificados Por Generar</a></li>
+                        <li sec:authorize="hasRole('ROLE_DIRECTOR')"><a class="dropdown-item fw-bold" th:href="@{'/certificates/pressure/generated'}">Certificados Generados</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown me-5">
+                    <a class="nav-link dropdown-toggle" id="dropdownTERMOMETROS" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #b6d4fe; font-weight: bold">
+                        TERMÓMETROS
+                    </a>
+                    <ul class="dropdown-menu  animate__animated animate__fadeInDown animate__faster dropdown-bg" aria-labelledby="dropdownTERMOMETROS">
+                        <li><a class="dropdown-item fw-bold" th:href="@{'/temperature/wizard'}">Ingresar nueva toma de datos</a></li>
+                        <li><a class="dropdown-item fw-bold" th:href="@{'/temperature/finish/list'}">Finalizar pendientes</a></li>
+                        <li><a class="dropdown-item fw-bold" th:href="@{'/certificates/temperature/pre-registered'}">Revisar finalizados</a></li>
+                        <li sec:authorize="hasRole('ROLE_DIRECTOR')"><a class="dropdown-item fw-bold" th:href="@{'/certificates/temperature/to-generate'}">Certificados Por Generar</a></li>
+                        <li sec:authorize="hasRole('ROLE_DIRECTOR')"><a class="dropdown-item fw-bold" th:href="@{'/certificates/temperature/generated'}">Certificados Generados</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown me-5" sec:authorize="hasRole('ROLE_DIRECTOR')">
+                    <a class="nav-link dropdown-toggle" id="dropdownREPORTES" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #b6d4fe; font-weight: bold">
+                        REPORTES
+                    </a>
+                    <ul class="dropdown-menu  animate__animated animate__fadeInDown animate__faster dropdown-bg" aria-labelledby="dropdownREPORTES">
+                        <li><a class="dropdown-item fw-bold" th:href="@{'/certificates/list'}">Certificados emitidos</a></li>
+                        <li><a class="dropdown-item fw-bold" th:href="@{'/patterns/list'}">Entrada y salida de patrones</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown me-5">
+                    <a class="nav-link dropdown-toggle" id="dropdownEQUIPAMENTO" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #b6d4fe; font-weight: bold">
+                        EQUIPAMENTO
+                    </a>
+                    <ul class="dropdown-menu animate__animated animate__fadeInDown animate__faster dropdown-bg" aria-labelledby="dropdownEQUIPAMENTO">
+                        <li><a role="button" class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#verificationModal">Comprobaciones intermedias</a></li>
+                        <li><a class="dropdown-item fw-bold" th:href="@{'/maintenance/list'}">Registro de mantenimiento</a></li>
+                        <li sec:authorize="hasRole('ROLE_DIRECTOR')"><a class="dropdown-item fw-bold" th:href="@{'/verification/plan/list'}">Plan de mantenimiento, calibración y comprobaciones intermedias</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- logout button -->
+        <div class="btn-group">
+            <button sec:authorize="isAuthenticated()" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <span sec:authentication="name"></span>
+            </button>
+            <a sec:authorize="!isAuthenticated()" class="btn btn-secondary nav-item active" th:href="@{/login}">Login</a>
+            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                <li sec:authorize="isAuthenticated()"><form id="logoutForm" th:action="@{/logout}" method="post">
+                    <button class="dropdown-item" onclick="document.getElementById('logoutForm').submit();"
+                            type="submit">Cerrar sesión
+                    </button>
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                </form></li>
+            </ul>
+        </div>
+    </div>
+
+</nav>
+</body>
+</html>
