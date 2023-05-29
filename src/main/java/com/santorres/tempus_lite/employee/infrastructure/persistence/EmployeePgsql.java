@@ -106,4 +106,14 @@ public class EmployeePgsql implements EmployeeRepository {
 
         return false;
     }
+
+    @Override
+    public List<EmployeeData> getHeadAreaEmployees() {
+        String sql = " select employees.*, r.name as role_name " +
+                " from bd_1.employees " +
+                " join bd_1.employee_roles r on r.id = employees.fk_role " +
+                " where fk_role = 2";
+
+        return jdbcTemplate.query(sql, new EmployeeDataRowMapper());
+    }
 }

@@ -5,5 +5,5 @@ import java.util.Optional;
 public interface UserRepository {
     boolean saveNewUser(User user);
 
-    Optional<User> getUserByUserName(String username);
+    User getUserByUserName(String username);
 }

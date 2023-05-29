@@ -10,8 +10,8 @@ public final class MainPageController {
 
     @GetMapping({"/", "/index", "/home"})
     public String index(Model model, Authentication authentication) {
-        String userName = authentication.getName();
-        model.addAttribute("userName", userName);
+//        String userName = authentication.getName();
+        //model.addAttribute("userName", userName);
         return "index";
     }
 }

@@ -9,11 +9,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class EmployeeRoleMysql implements EmployeeRoleRepository {
+public class EmployeeRolePgsql implements EmployeeRoleRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public EmployeeRoleMysql(NamedParameterJdbcTemplate jdbcTemplate) {
+    public EmployeeRolePgsql(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

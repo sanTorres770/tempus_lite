@@ -10,4 +10,6 @@ public interface EmployeeRepository {
     EmployeeData getEmployeeById(String documentId);
 
     boolean updateEmployee(Employee employee, String documentId);
+
+    List<EmployeeData> getHeadAreaEmployees();
 }

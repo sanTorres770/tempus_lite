@@ -9,7 +9,7 @@
 </div>
 
 <div class="container shadow p-3 mb-5 rounded">
-    <h3 class="text-center fst-italic">Crear nuevo empleado</h3>
+    <h3 class="text-center fst-italic text-white">Crear nuevo empleado</h3>
     <form th:action="@{/employee/save}" id="wizard" method="post">
         <div class="row g-2 mb-2 animate__animated animate__fadeIn">
             <div class="col-md">
@@ -56,12 +56,12 @@
         <div class="row g-2 mb-2 animate__animated animate__fadeIn">
             <div class="col-md">
                 <div class="form-floating">
-                    <select class="form-select" id="fkRole" name="fkRole" aria-label="fkRole">
+                    <select class="form-select input-centered" id="fkRole" name="fkRole" aria-label="fkRole">
                         <option value="">-- Seleccione --</option>
                         <option th:each="item: ${roles}" th:text="${item.name}"
                                 th:value="${item.id}"></option>
                     </select>
-                    <label for="fkRole">Tipo de cliente *</label>
+                    <label for="fkRole">Cargo del empleado *</label>
                 </div>
             </div>
             <p class="text-white">(*) Obligatorio</p>

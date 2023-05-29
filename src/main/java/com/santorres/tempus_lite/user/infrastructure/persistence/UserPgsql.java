@@ -51,7 +51,7 @@ public class UserPgsql implements UserRepository {
     }
 
     @Override
-    public Optional<User> getUserByUserName(String username) {
+    public User getUserByUserName(String username) {
 
         try {
 

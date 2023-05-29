@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+
+<body class="body-bg">
+<header th:replace="layout/layout :: header"></header>
+
+<div class="alert alert-danger text-uppercase" th:if="${goalDataList.size() == 0}">No hay objetivos para esta área por el momento!</div>
+
+<div class="mx-5 my-3">
+    <a th:href="@{'/'}" class="btn btn-dark mx-0 float-right">Regresar</a>
+</div>
+
+
+<div class="container shadow p-3 mb-5 rounded">
+    <h3 class="text-center fst-italic">Lista de áreas de trabajo</h3>
+    <table class="table table-dark table-bordered border-white table-striped table-hover">
+        <thead>
+            <tr>
+                <th class="text-center">#</th>
+                <th class="text-center">Descripción</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Creado por</th>
+                <th class="text-center">Área</th>
+                <th class="text-center">Revisar</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr class="table-active" th:each="goal,state: ${goalDataList}">
+            <td class="text-center" th:text="${state.count}"></td>
+            <td class="text-center" th:text="${goal.description}"></td>
+            <td class="text-center" th:if="${goal.finished}">Finalizado</td>
+            <td class="text-center" th:if="${!goal.finished}">En proceso</td>
+            <td class="text-center" th:text="${goal.createdByName}"></td>
+            <td class="text-center" th:text="${goal.areaName}"></td>
+            <td class="text-center">
+                <a th:href="@{'/goal/get/' + goal.id}">
+                    <img th:src="@{/images/ic-40.png}" alt="lupa" height="32px" width="32px">
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a class="btn btn-success" th:href="${'/goal/form/' + fkArea}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+        </svg>
+        Agregar objetivo
+    </a>
+</div>
+
+
+<footer th:replace="layout/layout :: footer"></footer>
+
+</body>
+</html>

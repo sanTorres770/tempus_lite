@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+
+<body class="body-bg">
+<header th:replace="layout/layout :: header"></header>
+<div class="mx-5 my-3">
+    <a th:href="@{'/'}" class="btn btn-secondary mx-0 float-right">Regresar</a>
+</div>
+
+<div class="container shadow p-3 mb-5 rounded">
+    <h3 class="text-center fst-italic text-white">Crear nueva área de trabajo</h3>
+    <form th:action="@{/area/save}" id="wizard" method="post">
+        <div class="row g-2 mb-2 animate__animated animate__fadeIn">
+            <div class="col-md">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Nombre del área de trabajo *">
+                    <label for="name">Nombre del área de trabajo *</label>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="form-floating">
+                    <select class="form-select input-centered" id="fkAreaBoss" name="fkAreaBoss" aria-label="fkAreaBoss">
+                        <option value="">-- Seleccione --</option>
+                        <option th:each="item: ${areaHead}" th:text="${item.name + ' ' + item.lastName}"
+                                th:value="${item.documentId}"></option>
+                    </select>
+                    <label for="fkAreaBoss">Asignar jefe *</label>
+                </div>
+            </div>
+            <p class="text-white">(*) Obligatorio</p>
+        </div>
+        <div class="text-center mt-4">
+            <button th:type="submit" class="btn btn-primary animate__animated animate__bounceInDown">Guardar área de trabajo</button>
+        </div>
+    </form>
+</div>
+
+
+<footer th:replace="layout/layout :: footer"></footer>
+<script th:src="@{/js/jquery.validate.min.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+<script th:src="@{/js/messages_es.js}"></script>
+<script th:src="@{/js/form-validation.js}"></script>
+
+</body>
+</html>
