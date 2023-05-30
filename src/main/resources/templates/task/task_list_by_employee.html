@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+
+<body class="body-bg">
+<header th:replace="layout/layout :: header"></header>
+
+<div class="alert alert-danger text-uppercase" th:if="${taskDataList.size() == 0}" th:text="${'No hay tareas asignadas por el momento para ' + user}"></div>
+
+<div class="mx-5 my-3">
+    <a th:href="@{'/'}" class="btn btn-dark mx-0 float-right">Regresar</a>
+</div>
+
+
+<div class="container shadow p-3 mb-5 rounded">
+    <table class="table table-dark table-bordered border-white table-striped table-hover">
+        <thead>
+        <tr style="background-color: #1c3852;color: #b6d4fe;width: 100px">
+            <th scope="col" colspan="5" class="text-center fst-italic"><h3>Mis tareas asignadas</h3></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="table-active">
+            <th scope="col" class="text-center text-uppercase">#</th>
+            <th scope="col" class="text-center text-uppercase">Descripción</th>
+            <th scope="col" class="text-center text-uppercase">Estado</th>
+            <th scope="col" class="text-center text-uppercase">Asignada por</th>
+            <th scope="col" class="text-center text-uppercase">Revisar</th>
+        </tr>
+        <tr th:each="task,state: ${taskDataList}">
+            <td class="text-center"><span th:text="${state.count}"></span></td>
+            <td class="text-center"><span th:text="${task.description}"></span></td>
+            <td class="text-center" th:if="${task.finished}">Finalizada</td>
+            <td class="text-center" th:if="${!task.finished}">En proceso</td>
+            <td class="text-center"><span th:text="${task.assignedForName}"></span></td>
+            <td class="text-center">
+                <a th:href="@{'/task/get/' + ${task.id}}">
+                    <img th:src="@{/images/ic-40.png}" alt="lupa" height="32px" width="32px">
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<footer th:replace="layout/layout :: footer"></footer>
+
+</body>
+</html>

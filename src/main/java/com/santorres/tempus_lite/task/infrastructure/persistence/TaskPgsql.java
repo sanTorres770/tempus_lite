@@ -91,4 +91,36 @@ public class TaskPgsql implements TaskRepository {
 
         return jdbcTemplate.queryForObject(sql,map,new TaskDataRowMapper());
     }
+
+    @Override
+    public List<TaskData> getTasksByEmployee(String employeeId) {
+
+        MapSqlParameterSource map = new MapSqlParameterSource();
+
+        map.addValue("id",employeeId);
+
+        String sql = " select t.*, upper(concat(afn.name, ' ', afn.last_name)) as assigned_for_name, " +
+                " upper(concat(atn.name, ' ', atn.last_name)) as assigned_to_name, g.description as goal_name" +
+                " from bd_1.tasks t " +
+                " join bd_1.employees afn on t.fk_assigned_for = afn.document_id " +
+                " join bd_1.employees atn on atn.document_id = t.fk_assigned_to " +
+                " join bd_1.goals g on g.id = t.fk_goal " +
+                " where t.fk_assigned_to = :id";
+
+        return jdbcTemplate.query(sql,map,new TaskDataRowMapper());
+    }
+
+    @Override
+    public void updateTaskProgress(String fkTask, double progress) {
+
+        MapSqlParameterSource map = new MapSqlParameterSource();
+
+        map.addValue("fkTask", fkTask);
+        map.addValue("progress", progress);
+
+        String sql = " update bd_1.tasks set progress=:progress where id=:fkTask";
+
+        jdbcTemplate.update(sql,map);
+
+    }
 }

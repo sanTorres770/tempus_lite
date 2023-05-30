@@ -13,7 +13,7 @@
 
 
 <div class="container shadow p-3 mb-5 rounded">
-    <h3 class="text-center fst-italic">Lista de áreas de trabajo</h3>
+    <h3 class="text-center fst-italic" th:if="${goalDataList.size() > 0}" th:text="${'Lista de objetivos del área ' + goalDataList.get(0).areaName}"></h3>
     <table class="table table-dark table-bordered border-white table-striped table-hover">
         <thead>
             <tr>

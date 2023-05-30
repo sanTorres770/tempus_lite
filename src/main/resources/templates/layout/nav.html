@@ -34,8 +34,16 @@
                         GESTIÓN DE OBJETIVOS
                     </a>
                     <ul class="dropdown-menu  animate__animated animate__fadeInDown animate__faster dropdown-bg" aria-labelledby="dropdown3">
-                        <li sec:authorize="hasRole('ROLE_MANAGER')"><a class="dropdown-item fw-bold" th:href="@{'/area/all'}">Crear nuevo objetivo</a></li>
-                        <li sec:authorize="hasRole('ROLE_AREAHEAD')"><a class="dropdown-item fw-bold" th:href="@{'/area/all'}">Crear nuevo objetivo</a></li>
+                        <li sec:authorize="hasAnyRole('ROLE_AREAHEAD', 'ROLE_MANAGER')"><a class="dropdown-item fw-bold" th:href="@{'/area/all'}">Listar objetivos del área</a></li>
+                    </ul>
+                </li>
+                <li sec:authorize="hasRole('ROLE_OPERATOR')" class="nav-item dropdown me-5">
+                    <a class="nav-link dropdown-toggle" id="dropdown4" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #b6d4fe; font-weight: bold">
+                    MIS TAREAS
+                    </a>
+                    <ul class="dropdown-menu  animate__animated animate__fadeInDown animate__faster dropdown-bg" aria-labelledby="dropdown4">
+                        <li><a class="dropdown-item fw-bold" th:href="@{'/task/by'}">Listar mis tareas</a></li>
+                        <li><a class="dropdown-item fw-bold" th:href="@{'/area/all'}">Crear nuevo objetivo</a></li>
                     </ul>
                 </li>
             </ul>

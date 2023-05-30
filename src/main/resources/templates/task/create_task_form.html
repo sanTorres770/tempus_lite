@@ -36,7 +36,8 @@
         <div class="row g-2 mb-2 animate__animated animate__fadeIn">
             <div class="form-floating">
                 <select class="form-select input-centered" id="fkAssignedTo" name="fkAssignedTo" aria-label="fkAssignedTo">
-                    <option value="">-- Seleccione --</option>
+                    <option value="" th:if="${operators.size() == 0}">** No hay empleados asignados al área por el momento **</option>
+                    <option value="" th:if="${operators.size() > 0}">-- Seleccione --</option>
                     <option th:each="item: ${operators}" th:text="${item.name + ' ' + item.lastName}"
                             th:value="${item.documentId}"></option>
                 </select>

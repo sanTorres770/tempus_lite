@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+
+<body class="body-bg">
+<header th:replace="layout/layout :: header"></header>
+
+<fieldset th:fragment="create_evidence_form">
+    <div class="container shadow p-3 mb-5 rounded">
+        <form th:action="@{/evidence/save}" id="wizard" method="post" enctype="multipart/form-data">
+            <div class="row g-2 mb-2 animate__animated animate__fadeIn">
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input type="number" class="form-control input-centered" id="progress" name="progress" placeholder="Porcentaje de progreso reportado (%) *">
+                        <label for="progress">Porcentaje de progreso reportado (%) *</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-2 mb-2 animate__animated animate__fadeIn">
+                <div class="col-md">
+                    <div class="form-control">
+                        <label for="fileName" class="mb-2">Imágen de la evidencia (opcional)</label>
+                        <input type="file" class="form-control" id="fileName" name="fileName" accept="application/pdf,image/png, .jpeg, .jpg">
+                    </div>
+                </div>
+            </div>
+            <div class="row g-2 mb-2 animate__animated animate__fadeIn">
+                <div class="col-md">
+                    <div class="form-floating">
+                        <textarea class="form-control" name="observation" id="observation" style="height: 100px; width: 100%"></textarea>
+                        <label for="observation">Observación</label>
+                    </div>
+                    <p class="mt-2">(*) Obligatorio</p>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <button th:type="submit" class="btn btn-primary animate__animated animate__bounceInDown">Guardar evidencia</button>
+            </div>
+            <div hidden>
+                <input type="text" th:value="${taskData.id}" name="fkTask">
+            </div>
+        </form>
+
+
+    </div>
+</fieldset>
+
+
+<footer th:replace="layout/layout :: footer"></footer>
+<script th:src="@{/js/jquery.validate.min.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+<script th:src="@{/js/messages_es.js}"></script>
+<script th:src="@{/js/form-validation.js}"></script>
+
+</body>
+</html>

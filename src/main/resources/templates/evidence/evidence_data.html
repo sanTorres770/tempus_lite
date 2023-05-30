@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org" lang="en"
+       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head"></head>
+<body class="body-bg">
+
+<header th:replace="layout/layout :: header"></header>
+
+<div class="mx-5 my-3" th:include="layout/return_button::return_button"></div>
+
+<div>
+    <div class="container shadow-lg p-3 mb-5 bg-light rounded">
+        <div class="row">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr style="background-color: #1c3852;color: #b6d4fe;width: 100px">
+                        <th scope="col" colspan="4" class="text-center fst-italic"><h3>Información de la evidencia</h3></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-primary">
+                        <th scope="col" colspan="4" class="text-center text-uppercase">Fecha y hora de creación</th>
+                    </tr>
+                    <tr>
+                        <td class="text-center" colspan="4"><span th:text="${evidenceData.uploadedAt}"></span></td>
+                    </tr>
+                    <tr class="table-primary">
+                        <th scope="col" colspan="2" class="text-center text-uppercase">Progreso reportado</th>
+                        <th scope="col" colspan="2" class="text-center text-uppercase">Estado</th>
+                    </tr>
+                    <tr>
+                        <td class="text-center" colspan="2"><span th:text="${evidenceData.progress + ' %'}"></span></td>
+                        <td class="text-center bg-success" th:if="${evidenceData.approved.equals('A')}">Aprobada</td>
+                        <td class="text-center bg-danger" th:if="${evidenceData.approved.equals('N')}">No aprobada</td>
+                        <td class="text-center bg-warning" th:if="${evidenceData.approved.equals('P')}">Pendiente de aprobación</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="container shadow-lg p-3 mb-5 bg-light rounded bg-secondary">
+
+        <div class="row g-2 mb-2">
+            <div class="col-md">
+                <div class="form-floating">
+                    <em class="fw-bold">Obervaciones</em>
+                    <p class="form-control" style="height: 100px" th:text="${evidenceData.observation}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container shadow-lg p-3 mb-5 bg-light rounded bg-secondary">
+
+
+        <label class="my-1 mr-2 fw-bold">Imágen de la evidencia</label>
+        <div class="text-center">
+            <div class="text-center">
+                <embed type="application/pdf" th:if="${evidenceData.fileName != null}" th:src="@{'/uploads/' + ${evidenceData.fileName} + '#toolbar=1'}" class="img-thumbnail rounded"
+                       width="70%" height="70%">
+            </div>
+            <div th:if="${evidenceData.fileName == null}" class="alert-info">No se ha subido ningún archivo.</div>
+        </div>
+
+    </div>
+
+    <div class="container shadow-lg p-3 mb-5 bg-light rounded bg-secondary" sec:authorize="hasAnyRole('ROLE_AREAHEAD')" th:if="${evidenceData.approved.equals('P')}">
+
+        <div class="d-flex justify-content-around align-items-center">
+
+            <div class="flex-column">
+                <a class="btn btn-success" th:href="@{'/evidence/approve/' + ${evidenceData.fkTask} + '/A:' + ${evidenceData.progress} + '/' + ${evidenceData.id}}">Aprobar</a>
+                <a class="btn btn-danger" th:href="@{'/evidence/approve/' + ${evidenceData.fkTask} + '/N/' + ${evidenceData.id}}">No aprobar</a>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

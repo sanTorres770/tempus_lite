@@ -8,4 +8,8 @@ public interface TaskRepository {
     boolean saveNewTask(Task task);
 
     TaskData getTaskById(String id);
+
+    List<TaskData> getTasksByEmployee(String employeeId);
+
+    void updateTaskProgress(String fkTask, double progress);
 }
