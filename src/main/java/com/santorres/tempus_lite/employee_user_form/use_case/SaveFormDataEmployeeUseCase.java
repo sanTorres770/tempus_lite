@@ -51,8 +51,9 @@ public class SaveFormDataEmployeeUseCase {
                 data.get("lastName"),
                 data.get("telephone"),
                 data.get("email"),
-                Integer.parseInt(data.get("fkRole"))
-        );
+                Integer.parseInt(data.get("fkRole")),
+                data.get("fkArea")
+                );
     }
 
     private User createUser(Map<String, String> data) {

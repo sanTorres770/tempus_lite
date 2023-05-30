@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+
+<body class="body-bg">
+<header th:replace="layout/layout :: header"></header>
+<div class="mx-5 my-3">
+    <a th:href="@{'/'}" class="btn btn-dark mx-0 float-right">Regresar</a>
+</div>
+
+<div class="container shadow p-3 mb-5 rounded">
+    <h3 class="text-center fst-italic text-white">Crear nueva tarea</h3>
+    <form th:action="@{/task/save}" id="wizard" method="post">
+        <div class="row g-2 mb-2 animate__animated animate__fadeIn">
+            <div class="col-md">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="description" name="description" placeholder="Descripción de la tarea *">
+                    <label for="description">Descripción de la tarea *</label>
+                </div>
+            </div>
+        </div>
+        <div class="row g-2 mb-2 animate__animated animate__fadeIn">
+            <div class="col-md">
+                <div class="form-floating">
+                    <input type="date" class="form-control" id="initialDate" name="initialDate" placeholder="Fecha inicial *">
+                    <label for="initialDate">Fecha inicial *</label>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="form-floating">
+                    <input type="date" class="form-control" id="finalDate" name="finalDate" placeholder="Fecha final *">
+                    <label for="finalDate">Fecha final *</label>
+                </div>
+            </div>
+        </div>
+        <div class="row g-2 mb-2 animate__animated animate__fadeIn">
+            <div class="form-floating">
+                <select class="form-select input-centered" id="fkAssignedTo" name="fkAssignedTo" aria-label="fkAssignedTo">
+                    <option value="">-- Seleccione --</option>
+                    <option th:each="item: ${operators}" th:text="${item.name + ' ' + item.lastName}"
+                            th:value="${item.documentId}"></option>
+                </select>
+                <label for="fkAssignedTo">Asignar operador *</label>
+            </div>
+        </div>
+        <div class="row g-2 mb-2 animate__animated animate__fadeIn">
+            <div class="col-md">
+                <div class="form-floating">
+                    <textarea class="form-control" name="observation" id="observation" style="height: 100px; width: 100%"></textarea>
+                    <label for="observation">Observación</label>
+                </div>
+                <p class="text-white">(*) Obligatorio</p>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <button th:type="submit" class="btn btn-primary animate__animated animate__bounceInDown">Guardar tarea</button>
+        </div>
+        <div hidden>
+            <input type="text" th:value="${fkGoal}" name="fkGoal">
+            <input type="text" th:value="${assignedFor}" name="fkAssignedFor">
+        </div>
+    </form>
+</div>
+
+
+<footer th:replace="layout/layout :: footer"></footer>
+<script th:src="@{/js/jquery.validate.min.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+<script th:src="@{/js/messages_es.js}"></script>
+<script th:src="@{/js/form-validation.js}"></script>
+
+</body>
+</html>

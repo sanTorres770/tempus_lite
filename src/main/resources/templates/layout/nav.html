@@ -29,6 +29,15 @@
                         <li ><a class="dropdown-item fw-bold" th:href="@{'/area/all'}">Listar todas las áreas</a></li>
                     </ul>
                 </li>
+                <li sec:authorize="hasAnyRole('ROLE_MANAGER','ROLE_AREAHEAD')" class="nav-item dropdown me-5">
+                    <a class="nav-link dropdown-toggle" id="dropdown3" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #b6d4fe; font-weight: bold">
+                        GESTIÓN DE OBJETIVOS
+                    </a>
+                    <ul class="dropdown-menu  animate__animated animate__fadeInDown animate__faster dropdown-bg" aria-labelledby="dropdown3">
+                        <li sec:authorize="hasRole('ROLE_MANAGER')"><a class="dropdown-item fw-bold" th:href="@{'/area/all'}">Crear nuevo objetivo</a></li>
+                        <li sec:authorize="hasRole('ROLE_AREAHEAD')"><a class="dropdown-item fw-bold" th:href="@{'/area/all'}">Crear nuevo objetivo</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">

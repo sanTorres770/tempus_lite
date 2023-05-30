@@ -28,7 +28,7 @@ public class GoalPgsql implements GoalRepository {
         String sql = " select g.*, upper(concat(e.name, ' ', e.last_name)) as created_by_name, a.name as area_name from bd_1.goals g " +
                 " join bd_1.employees e on e.document_id = g.fk_created_by " +
                 " join bd_1.areas a on a.id = g.fk_area" +
-                " where fk_area = :fkArea";
+                " where g.fk_area = :fkArea";
 
         return jdbcTemplate.query(sql,map,new GoalDataRowMapper());
 
@@ -75,5 +75,21 @@ public class GoalPgsql implements GoalRepository {
         }
 
         return false;
+    }
+
+    @Override
+    public GoalData getGoalById(String id) {
+
+        MapSqlParameterSource map = new MapSqlParameterSource();
+
+        map.addValue("id",id);
+
+        String sql = " select g.*, upper(concat(e.name, ' ', e.last_name)) as created_by_name, a.name as area_name " +
+                " from bd_1.goals g " +
+                " join bd_1.employees e on e.document_id = g.fk_created_by " +
+                " join bd_1.areas a on a.id = g.fk_area" +
+                " where g.id = :id";
+
+        return jdbcTemplate.queryForObject(sql,map,new GoalDataRowMapper());
     }
 }

@@ -29,7 +29,8 @@ public class UpdateEmployeeUseCase {
                 data.get("lastName"),
                 data.get("telephone"),
                 data.get("email"),
-                Integer.parseInt(data.get("fkRole"))
+                Integer.parseInt(data.get("fkRole")),
+                data.get("fkArea")
         );
     }
 }
