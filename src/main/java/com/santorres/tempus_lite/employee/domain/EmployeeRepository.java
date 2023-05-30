@@ -12,4 +12,6 @@ public interface EmployeeRepository {
     boolean updateEmployee(Employee employee, String documentId);
 
     List<EmployeeData> getHeadAreaEmployees();
+
+    List<EmployeeData> getOperatorEmployeesByArea(String fkArea);
 }

@@ -7,4 +7,6 @@ public interface GoalRepository {
     List<GoalData> getAllGoals();
 
     boolean saveNewGoal(Goal goal);
+
+    GoalData getGoalById(String id);
 }

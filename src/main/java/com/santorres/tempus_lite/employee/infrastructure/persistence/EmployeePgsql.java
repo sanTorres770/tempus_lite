@@ -23,9 +23,11 @@ public class EmployeePgsql implements EmployeeRepository {
     public List<EmployeeData> getAll() {
 
 
-        String sql = " select employees.*, r.name as role_name " +
+        String sql = " select employees.*, r.name as role_name, a.name as area_name " +
                 " from bd_1.employees " +
-                " join bd_1.employee_roles r on r.id = employees.fk_role order by document_id asc";
+                " join bd_1.employee_roles r on r.id = employees.fk_role " +
+                " join bd_1.areas a on a.id = employees.fk_area " +
+                " order by document_id";
 
         return jdbcTemplate.query(sql, new EmployeeDataRowMapper());
     }
@@ -43,6 +45,7 @@ public class EmployeePgsql implements EmployeeRepository {
             map.addValue("telephone",employee.getTelephone());
             map.addValue("email",employee.getEmail());
             map.addValue("fkRole",employee.getFkRole());
+            map.addValue("fkArea",employee.getFkArea());
 
             String sql = "insert into bd_1.employees values (" +
                     ":documentId, " +
@@ -50,7 +53,8 @@ public class EmployeePgsql implements EmployeeRepository {
                     ":last_name, " +
                     ":telephone, " +
                     ":email, " +
-                    ":fkRole)";
+                    ":fkRole," +
+                    ":fkArea)";
 
             return jdbcTemplate.update(sql,map) > 0;
 
@@ -68,10 +72,11 @@ public class EmployeePgsql implements EmployeeRepository {
 
         map.addValue("documentId",documentId);
 
-        String sql = " select employees.*, r.name as role_name " +
+        String sql = " select employees.*, r.name as role_name, a.name as area_name" +
                 " from bd_1.employees " +
                 " join bd_1.employee_roles r on r.id = employees.fk_role " +
-                "where document_id = :documentId";
+                " join bd_1.areas a on a.id = employees.fk_area " +
+                " where document_id = :documentId";
 
         return jdbcTemplate.queryForObject(sql, map, new EmployeeDataRowMapper());
     }
@@ -89,13 +94,15 @@ public class EmployeePgsql implements EmployeeRepository {
             map.addValue("telephone",employee.getTelephone());
             map.addValue("email",employee.getEmail());
             map.addValue("fkRole",employee.getFkRole());
+            map.addValue("fkArea",employee.getFkArea());
 
             String sql = "update bd_1.employees set " +
                     "name=:name, " +
                     "last_name=:last_name, " +
                     "telephone=:telephone, " +
                     "email=:email, " +
-                    "fk_role=:fkRole " +
+                    "fk_role=:fkRole, " +
+                    "fk_area=:fkArea " +
                     " where document_id = :documentId";
 
             return jdbcTemplate.update(sql,map) > 0;
@@ -109,11 +116,28 @@ public class EmployeePgsql implements EmployeeRepository {
 
     @Override
     public List<EmployeeData> getHeadAreaEmployees() {
-        String sql = " select employees.*, r.name as role_name " +
+        String sql = " select employees.*, r.name as role_name, a.name as area_name " +
                 " from bd_1.employees " +
                 " join bd_1.employee_roles r on r.id = employees.fk_role " +
+                " join bd_1.areas a on a.id = employees.fk_area " +
                 " where fk_role = 2";
 
         return jdbcTemplate.query(sql, new EmployeeDataRowMapper());
+    }
+
+    @Override
+    public List<EmployeeData> getOperatorEmployeesByArea(String fkArea) {
+
+        MapSqlParameterSource map = new MapSqlParameterSource();
+
+        map.addValue("fkArea",fkArea);
+
+        String sql = " select employees.*, r.name as role_name, a.name as area_name " +
+                " from bd_1.employees " +
+                " join bd_1.employee_roles r on r.id = employees.fk_role " +
+                " join bd_1.areas a on a.id = employees.fk_area" +
+                " where fk_role = 3 and fk_area = :fkArea";
+
+        return jdbcTemplate.query(sql, map, new EmployeeDataRowMapper());
     }
 }

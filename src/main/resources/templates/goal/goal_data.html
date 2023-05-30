@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="layout/layout :: head"></head>
+<body class="body-bg">
+
+<header th:replace="layout/layout :: header"></header>
+
+<div class="mx-5 my-3" th:include="layout/return_button::return_button"></div>
+
+<div>
+    <div class="container shadow-lg p-3 mb-5 bg-light rounded">
+        <div class="row">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr style="background-color: #1c3852;color: #b6d4fe;width: 100px">
+                        <th scope="col" colspan="4" class="text-center fst-italic"><h3>Información del objetivo</h3></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-primary">
+                        <th scope="col" colspan="4" class="text-center text-uppercase">Descripción</th>
+                    </tr>
+                    <tr>
+                        <td class="text-center" colspan="4"><span th:text="${goalData.description}"></span></td>
+                    </tr>
+                    <tr class="table-primary">
+                        <th scope="col" colspan="2" class="text-center text-uppercase">Fecha inicial</th>
+                        <th scope="col" colspan="2" class="text-center text-uppercase">Fecha final</th>
+                    </tr>
+                    <tr>
+                        <td class="text-center" colspan="2"><span th:text="${goalData.initialDate}"></span></td>
+                        <td class="text-center" colspan="2"><span th:text="${goalData.finalDate}"></span></td>
+                    </tr>
+                    <tr class="table-primary">
+                        <th scope="col" colspan="4" class="text-center text-uppercase">Asignado por</th>
+                    </tr>
+                    <tr>
+                        <td class="text-center" colspan="4"><span th:text="${goalData.createdByName}"></span></td>
+                    </tr>
+                    <tr class="table-primary">
+                        <th scope="col" colspan="4" class="text-center text-uppercase">Estado</th>
+                    </tr>
+                    <tr>
+                        <td class="text-center bg-success" colspan="4" th:if="${goalData.finished}">Finalizado</td>
+                        <td class="text-center bg-warning" colspan="4" th:if="${!goalData.finished}">En proceso</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="container shadow-lg p-3 mb-5 bg-light rounded bg-secondary">
+
+        <div class="row g-2 mb-2">
+            <div class="col-md">
+                <div class="form-floating">
+                    <em class="fw-bold">Obervaciones</em>
+                    <p class="form-control" style="height: 100px" th:text="${goalData.observation}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container shadow-lg p-3 mb-5 bg-light rounded bg-secondary">
+
+        <div class="alert alert-danger text-uppercase" th:if="${taskDataList.size() == 0}">No hay tareas asignadas por el momento!</div>
+
+        <table class="table table-bordered table-hover" th:if="${taskDataList.size() > 0}">
+            <thead>
+            <tr style="background-color: #1c3852;color: #b6d4fe;width: 100px">
+                <th scope="col" colspan="5" class="text-center fst-italic"><h3>Tareas agignadas al objetivo</h3></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="table-primary">
+                <th scope="col" class="text-center text-uppercase">#</th>
+                <th scope="col" class="text-center text-uppercase">Descripción</th>
+                <th scope="col" class="text-center text-uppercase">Estado</th>
+                <th scope="col" class="text-center text-uppercase">Asignada por</th>
+                <th scope="col" class="text-center text-uppercase">Revisar</th>
+            </tr>
+            <tr th:each="task,state: ${taskDataList}">
+                <td class="text-center"><span th:text="${state.count}"></span></td>
+                <td class="text-center"><span th:text="${task.description}"></span></td>
+                <td class="text-center" th:if="${task.finished}">Finalizada</td>
+                <td class="text-center" th:if="${!task.finished}">En proceso</td>
+                <td class="text-center"><span th:text="${task.assignedForName}"></span></td>
+                <td class="text-center">
+                    <a th:href="@{'/task/get/' + ${task.id}}">
+                        <img th:src="@{/images/ic-40.png}" alt="lupa" height="32px" width="32px">
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <a class="btn btn-success" th:href="@{'/task/form/' + ${fkGoal} + '/' +${goalData.fkArea}}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+            </svg>
+            Agregar tarea
+        </a>
+
+    </div>
+
+
+</div>
+
+<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

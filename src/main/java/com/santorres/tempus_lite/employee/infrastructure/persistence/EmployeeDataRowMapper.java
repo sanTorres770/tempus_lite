@@ -16,7 +16,9 @@ public class EmployeeDataRowMapper implements RowMapper<EmployeeData> {
         String telephone = rs.getString("telephone");
         String email = rs.getString("email");
         int fkRole = rs.getInt("fk_role");
+        String fkArea = rs.getString("fk_area");
         String roleName = rs.getString("role_name");
+        String areaName = rs.getString("area_name");
 
         return new EmployeeData(
                 documentId,
@@ -25,7 +27,9 @@ public class EmployeeDataRowMapper implements RowMapper<EmployeeData> {
                 telephone,
                 email,
                 fkRole,
-                roleName
+                fkArea,
+                roleName,
+                areaName
         );
     }
 }

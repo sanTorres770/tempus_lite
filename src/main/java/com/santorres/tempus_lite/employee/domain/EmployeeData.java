@@ -13,5 +13,7 @@ public class EmployeeData {
     private String telephone;
     private String email;
     private int fkRole;
+    private String fkArea;
     private String roleName;
+    private String areaName;
 }

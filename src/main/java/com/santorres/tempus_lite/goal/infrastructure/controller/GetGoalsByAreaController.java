@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 
 @Controller
-public class GetGoalByAreaController {
+public class GetGoalsByAreaController {
 
     private final GetGoalsByAreaUseCase getGoalsByAreaUseCase;
 
-    public GetGoalByAreaController(GetGoalsByAreaUseCase getGoalsByAreaUseCase) {
+    public GetGoalsByAreaController(GetGoalsByAreaUseCase getGoalsByAreaUseCase) {
         this.getGoalsByAreaUseCase = getGoalsByAreaUseCase;
     }
 

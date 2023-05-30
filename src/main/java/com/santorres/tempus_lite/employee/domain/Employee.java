@@ -13,4 +13,5 @@ public class Employee {
     private String telephone;
     private String email;
     private int fkRole;
+    private String fkArea;
 }
