@@ -18,6 +18,6 @@ public class MvcConfig implements WebMvcConfigurer {
 
         WebMvcConfigurer.super.addResourceHandlers(registry);
         registry.addResourceHandler("/uploads/**")
-        .addResourceLocations("file:/home/byslnx/uploads/");
+        .addResourceLocations("file:C:\\Users\\sanpe\\OneDrive\\Desktop\\uploads\\");
     }
 }
