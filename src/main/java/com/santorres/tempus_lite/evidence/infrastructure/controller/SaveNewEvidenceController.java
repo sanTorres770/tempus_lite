@@ -38,33 +38,42 @@ public class SaveNewEvidenceController {
     @PostMapping("/evidence/save")
     public String save(@RequestParam Map<String,String> body, @RequestParam("fileName") MultipartFile dataImage, RedirectAttributes flash) {
 
+            if (!dataImage.isEmpty()) {
 
-        if (!dataImage.isEmpty()) {
+                String uniqueFileName = UUID.randomUUID() + "_" + trimImageName(Objects.requireNonNull(dataImage.getOriginalFilename()));
+                String rootPath = "C:\\Users\\sanpe\\OneDrive\\Desktop\\uploads";
 
-            String uniqueFileName = UUID.randomUUID() + "_" + trimImageName(Objects.requireNonNull(dataImage.getOriginalFilename()));
-            String rootPath = "/home/byslnx/uploads/";
+                body.put("dataImage", uniqueFileName);
 
-            body.put("dataImage",uniqueFileName);
+                try {
 
-            try {
+                    if (saveNewEvidenceUseCase.saveNewEvidence(body)) {
+                        byte[] bytes = dataImage.getBytes();
+                        Path allPath = Paths.get(rootPath + "//" + uniqueFileName);
+                        Files.write(allPath, bytes);
+
+                        flash.addFlashAttribute("success", "La evidencia se guardó correctamente.");
+                        flash.addFlashAttribute("info", "Se subió correctamente la imágen de la evidencia '" + dataImage.getOriginalFilename() + "'");
+
+                    } else {
+                        flash.addFlashAttribute("error", "La información no se guardó. Revise y vuelva a intentarlo.");
+                        flash.addFlashAttribute("info", "La imágen no se subió correctamente. Reduzca el nombre del archivo y revise el formato para volver a intentarlo en la opción 'Editar toma de datos'.");
+                    }
+
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+
+                }
+            }else {
 
                 if (saveNewEvidenceUseCase.saveNewEvidence(body)) {
-                    byte[] bytes = dataImage.getBytes();
-                    Path allPath = Paths.get(rootPath + "//" + uniqueFileName);
-                    Files.write(allPath, bytes);
 
-                    flash.addAttribute("success", "La evidencia se guardó correctamente.");
-                    flash.addFlashAttribute("success", "Se subió correctamente la imágen de la evidencia '" + dataImage.getOriginalFilename() + "'");
+                    flash.addFlashAttribute("success", "La evidencia se guardó correctamente.");
 
                 } else {
-                    flash.addAttribute("error", "La información no se guardó. Revise y vuelva a intentarlo.");
-                    flash.addFlashAttribute("error", "La imágen no se subió correctamente. Reduzca el nombre del archivo y revise el formato para volver a intentarlo en la opción 'Editar toma de datos'.");
+                    flash.addFlashAttribute("error", "La información no se guardó. Revise y vuelva a intentarlo.");
                 }
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
-        }
 
         return "redirect:/task/get/"+body.get("fkTask");
 
