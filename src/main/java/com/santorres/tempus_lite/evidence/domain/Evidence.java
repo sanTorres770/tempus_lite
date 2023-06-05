@@ -15,4 +15,5 @@ public class Evidence {
     private double progress;
     private String fkTask;
     private String approved;
+    private String createdBy;
 }

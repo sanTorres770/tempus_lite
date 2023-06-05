@@ -34,7 +34,6 @@ public class SaveNewTaskUseCase {
                 false,
                 data.get("observation"),
                 data.get("fkAssignedFor"),
-                data.get("fkAssignedTo"),
                 data.get("fkGoal")
         );
     }

@@ -16,7 +16,7 @@
     <table class="table table-dark table-bordered border-white table-striped table-hover">
         <thead>
         <tr style="background-color: #1c3852;color: #b6d4fe;width: 100px">
-            <th scope="col" colspan="5" class="text-center fst-italic"><h3>Mis tareas asignadas</h3></th>
+            <th scope="col" colspan="6" class="text-center fst-italic"><h3>Mis tareas asignadas</h3></th>
         </tr>
         </thead>
         <tbody>
@@ -25,6 +25,7 @@
             <th scope="col" class="text-center text-uppercase">Descripción</th>
             <th scope="col" class="text-center text-uppercase">Estado</th>
             <th scope="col" class="text-center text-uppercase">Asignada por</th>
+            <th scope="col" class="text-center text-uppercase">Fecha y hora de asignación</th>
             <th scope="col" class="text-center text-uppercase">Revisar</th>
         </tr>
         <tr th:each="task,state: ${taskDataList}">
@@ -33,6 +34,7 @@
             <td class="text-center" th:if="${task.finished}">Finalizada</td>
             <td class="text-center" th:if="${!task.finished}">En proceso</td>
             <td class="text-center"><span th:text="${task.assignedForName}"></span></td>
+            <td class="text-center"><span th:text="${task.assignedAt}"></span></td>
             <td class="text-center">
                 <a th:href="@{'/task/get/' + ${task.id}}">
                     <img th:src="@{/images/ic-40.png}" alt="lupa" height="32px" width="32px">

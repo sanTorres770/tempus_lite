@@ -34,11 +34,8 @@ public class SaveNewTaskController {
 
         User user = getUserByUserNameUseCase.getUserByUserName(username);
 
-        List<EmployeeData> employeeDataList = operatorEmployeesUseCase.getOperatorEmployeesByArea(fkArea);
-
         model.addAttribute("fkGoal",fkGoal);
         model.addAttribute("assignedFor",user.getId());
-        model.addAttribute("operators",employeeDataList);
 
         return "/task/create_task_form";
     }

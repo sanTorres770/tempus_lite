@@ -20,6 +20,8 @@ public class EvidenceDataRowMapper implements RowMapper<EvidenceData> {
         String fkTask = rs.getString("fk_task");
         String taskDescription = rs.getString("task_description");
         String approved = rs.getString("approved");
+        String createdBy = rs.getString("created_by");
+        String createdByName = rs.getString("created_by_name");
 
 
         return new EvidenceData(
@@ -30,7 +32,9 @@ public class EvidenceDataRowMapper implements RowMapper<EvidenceData> {
                 progress,
                 fkTask,
                 taskDescription,
-                approved
+                approved,
+                createdBy,
+                createdByName
         );
     }
 }

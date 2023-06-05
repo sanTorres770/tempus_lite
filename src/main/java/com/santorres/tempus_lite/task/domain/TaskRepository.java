@@ -1,5 +1,6 @@
 package com.santorres.tempus_lite.task.domain;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TaskRepository {
@@ -11,5 +12,8 @@ public interface TaskRepository {
 
     List<TaskData> getTasksByEmployee(String employeeId);
 
-    void updateTaskProgress(String fkTask, double progress);
+    void updateTaskAndGoalProgress(String fkTask, double progress);
+
+    void assignTaskNullToEmployee(String idDocument, String taskId, LocalDateTime assignedAt);
+
 }

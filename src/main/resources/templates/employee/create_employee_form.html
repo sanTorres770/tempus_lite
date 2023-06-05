@@ -7,8 +7,8 @@
 <div class="mx-5 my-3" th:include="layout/return_button::return_button"></div>
 
 
-<div class="container shadow p-3 mb-5 rounded">
-    <h3 class="text-center fst-italic text-white">Crear nuevo empleado</h3>
+<div class="container shadow p-3 mb-5 rounded" style="background-color: #ceddf6">
+    <h3 class="text-center fst-italic">Crear nuevo empleado</h3>
     <form th:action="@{/employee/save}" id="wizard" method="post">
         <div class="row g-2 mb-2 animate__animated animate__fadeIn">
             <div class="col-md">
@@ -65,16 +65,15 @@
             </div>
             <div class="col-md">
                 <div class="form-floating">
-                    <select class="form-select input-centered" id="fkArea" name="fkArea" aria-label="fkArea">
-                        <option value="" th:if="${areas.size() >  0}">-- Seleccione --</option>
-                        <option value="" th:if="${areas.size() ==  0}">** No existen áreas por el momento **</option>
-                        <option th:each="item: ${areas}" th:text="${item.name}"
+                    <select class="form-select input-centered" id="workshiftId" name="workshiftId" aria-label="workshiftId">
+                        <option value="">-- Seleccione --</option>
+                        <option th:each="item: ${workshifts}" th:text="${item.id + '=> ' + item.initialHour + '-' + item.finalHour}"
                                 th:value="${item.id}"></option>
                     </select>
-                    <label for="fkArea">Asignar un área *</label>
+                    <label for="workshiftId">Asignar horario *</label>
                 </div>
             </div>
-            <p class="text-white">(*) Obligatorio</p>
+            <p>(*) Obligatorio</p>
         </div>
         <div class="text-center mt-4">
             <button th:type="submit" class="btn btn-primary animate__animated animate__bounceInDown">Guardar empleado</button>

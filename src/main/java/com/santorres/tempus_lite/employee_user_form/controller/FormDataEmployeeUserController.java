@@ -3,8 +3,9 @@ package com.santorres.tempus_lite.employee_user_form.controller;
 import com.santorres.tempus_lite.employee_role.domain.EmployeeRole;
 import com.santorres.tempus_lite.employee_role.use_case.GetAllEmployeeRolesUseCase;
 import com.santorres.tempus_lite.employee_user_form.use_case.SaveFormDataEmployeeUseCase;
-import com.santorres.tempus_lite.working_area.domain.WorkingAreaData;
 import com.santorres.tempus_lite.working_area.use_case.GetAllWorkingAreasUseCase;
+import com.santorres.tempus_lite.workshift.domain.Workshift;
+import com.santorres.tempus_lite.workshift.use_case.GetAllWorkshiftsUseCase;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +19,12 @@ public class FormDataEmployeeUserController {
 
     private final SaveFormDataEmployeeUseCase saveFormDataEmployeeUseCase;
     private final GetAllEmployeeRolesUseCase getAllEmployeeRolesUseCase;
-    private final GetAllWorkingAreasUseCase getAllWorkingAreasUseCase;
+    private final GetAllWorkshiftsUseCase getAllWorkshiftsUseCase;
 
-    public FormDataEmployeeUserController(SaveFormDataEmployeeUseCase saveFormDataEmployeeUseCase, GetAllEmployeeRolesUseCase getAllEmployeeRolesUseCase, GetAllWorkingAreasUseCase getAllWorkingAreasUseCase) {
+    public FormDataEmployeeUserController(SaveFormDataEmployeeUseCase saveFormDataEmployeeUseCase, GetAllEmployeeRolesUseCase getAllEmployeeRolesUseCase, GetAllWorkingAreasUseCase getAllWorkingAreasUseCase, GetAllWorkshiftsUseCase getAllWorkshiftsUseCase) {
         this.saveFormDataEmployeeUseCase = saveFormDataEmployeeUseCase;
         this.getAllEmployeeRolesUseCase = getAllEmployeeRolesUseCase;
-        this.getAllWorkingAreasUseCase = getAllWorkingAreasUseCase;
+        this.getAllWorkshiftsUseCase = getAllWorkshiftsUseCase;
     }
 
     @GetMapping("/employee/form")
@@ -52,6 +53,9 @@ public class FormDataEmployeeUserController {
         return getAllEmployeeRolesUseCase.getAll();
     }
 
-    @ModelAttribute("areas")
-    public List<WorkingAreaData> getAreas(){ return getAllWorkingAreasUseCase.getAll();}
+    @ModelAttribute("workshifts")
+    public List<Workshift> getWorkshift(){
+        return getAllWorkshiftsUseCase.getAll();
+    }
+
 }

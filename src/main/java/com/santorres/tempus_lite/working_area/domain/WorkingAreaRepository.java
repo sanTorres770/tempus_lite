@@ -6,4 +6,6 @@ public interface WorkingAreaRepository {
     boolean saveNewWorkingArea(WorkingArea workingArea);
 
     List<WorkingAreaData> getAll();
+
+    WorkingAreaData getWorkingAreaByHead(String headAreaId);
 }

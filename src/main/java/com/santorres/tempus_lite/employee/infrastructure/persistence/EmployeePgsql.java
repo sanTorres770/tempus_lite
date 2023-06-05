@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -26,8 +27,9 @@ public class EmployeePgsql implements EmployeeRepository {
         String sql = " select employees.*, r.name as role_name, a.name as area_name " +
                 " from bd_1.employees " +
                 " join bd_1.employee_roles r on r.id = employees.fk_role " +
-                " join bd_1.areas a on a.id = employees.fk_area " +
-                " order by document_id";
+                " left outer join bd_1.areas a on a.id = employees.fk_area " +
+                " where fk_role not in ('1')" +
+                " order by employees.name";
 
         return jdbcTemplate.query(sql, new EmployeeDataRowMapper());
     }
@@ -119,8 +121,8 @@ public class EmployeePgsql implements EmployeeRepository {
         String sql = " select employees.*, r.name as role_name, a.name as area_name " +
                 " from bd_1.employees " +
                 " join bd_1.employee_roles r on r.id = employees.fk_role " +
-                " join bd_1.areas a on a.id = employees.fk_area " +
-                " where fk_role = 2";
+                " left outer join bd_1.areas a on a.id = employees.fk_area " +
+                " where fk_role = 2 and fk_area is null ";
 
         return jdbcTemplate.query(sql, new EmployeeDataRowMapper());
     }
@@ -135,9 +137,100 @@ public class EmployeePgsql implements EmployeeRepository {
         String sql = " select employees.*, r.name as role_name, a.name as area_name " +
                 " from bd_1.employees " +
                 " join bd_1.employee_roles r on r.id = employees.fk_role " +
-                " join bd_1.areas a on a.id = employees.fk_area" +
-                " where fk_role = 3 and fk_area = :fkArea";
+                " left outer join bd_1.areas a on a.id = employees.fk_area" +
+                " where fk_area = :fkArea and fk_role= 3 ";
 
         return jdbcTemplate.query(sql, map, new EmployeeDataRowMapper());
     }
+
+    @Override
+    public boolean assignEmployeeToArea(String employeeId, String fkArea) {
+
+        MapSqlParameterSource map = new MapSqlParameterSource();
+
+        map.addValue("employeeId",employeeId);
+        map.addValue("fkArea",fkArea);
+
+        String sql = "update bd_1.employees set fk_area=:fkArea where document_id=:employeeId";
+
+        return jdbcTemplate.update(sql,map) > 0;
+    }
+
+    @Override
+    public boolean assignEmployeeToTask(String employeeId, String fkTask) {
+        MapSqlParameterSource map = new MapSqlParameterSource();
+
+        map.addValue("employeeId",employeeId);
+        map.addValue("fkTask",fkTask);
+        map.addValue("assignedAt", LocalDateTime.now());
+
+        String sql = "update bd_1.assigned_tasks set fk_task=:fkTask, assigned_at = :assignedAt " +
+                "where fk_employee=:employeeId and fk_task is null and assigned_at is null";
+
+        return jdbcTemplate.update(sql,map) > 0;
+    }
+
+    @Override
+    public List<EmployeeData> getOperatorEmployeesAvailable() {
+
+
+        String sql = " select employees.*, r.name as role_name, a.name as area_name, t.fk_task " +
+                " from bd_1.employees " +
+                " join bd_1.employee_roles r on r.id = employees.fk_role " +
+                " left outer join bd_1.areas a on a.id = employees.fk_area" +
+                " left outer join bd_1.assigned_tasks t on t.fk_employee = employees.document_id" +
+                " where fk_role = 3 and fk_area is null and t.fk_task is null";
+
+        return jdbcTemplate.query(sql, new EmployeeDataRowMapper());
+    }
+
+    @Override
+    public List<EmployeeData> getOperatorEmployeesAvailableByArea(String fkArea) {
+
+        MapSqlParameterSource map = new MapSqlParameterSource();
+
+        map.addValue("fkArea",fkArea);
+
+        String sql = " select employees.*, r.name as role_name, a.name as area_name " +
+                " from bd_1.employees " +
+                " join bd_1.employee_roles r on r.id = employees.fk_role " +
+                " left outer join bd_1.areas a on a.id = employees.fk_area" +
+                " left outer join bd_1.assigned_tasks t on t.fk_employee = employees.document_id" +
+                " where fk_role = 3 and fk_area= :fkArea and t.fk_task is null";
+
+        return jdbcTemplate.query(sql, map, new EmployeeDataRowMapper());
+    }
+
+    @Override
+    public void updateEmployeeArea(String employeeId, String areaId) {
+
+        MapSqlParameterSource map = new MapSqlParameterSource();
+
+        map.addValue("employeeId",employeeId);
+        map.addValue("areaId",areaId);
+
+        String sql = "update bd_1.employees set fk_area = :areaId where document_id=:employeeId";
+
+        jdbcTemplate.update(sql,map);
+
+    }
+
+    @Override
+    public List<EmployeeData> getOperatorEmployeesByTask(String fkTask) {
+
+        MapSqlParameterSource map = new MapSqlParameterSource();
+
+        map.addValue("fkTask",fkTask);
+
+        String sql = " select employees.*, r.name as role_name, a.name as area_name " +
+                " from bd_1.employees " +
+                " join bd_1.employee_roles r on r.id = employees.fk_role " +
+                " left outer join bd_1.areas a on a.id = employees.fk_area" +
+                " join bd_1.assigned_tasks on fk_employee= employees.document_id" +
+                " where assigned_tasks.fk_task = :fkTask ";
+
+        return jdbcTemplate.query(sql, map, new EmployeeDataRowMapper());
+    }
+
+
 }

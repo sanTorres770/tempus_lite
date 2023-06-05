@@ -24,6 +24,7 @@ public class GetAllWorkingAreasController {
         List<WorkingAreaData> workingAreaDataList = getAllWorkingAreasUseCase.getAll();
 
         model.addAttribute("workingAreaDataList",workingAreaDataList);
+        model.addAttribute("all",true);
 
         return "/area/area_list";
     }
