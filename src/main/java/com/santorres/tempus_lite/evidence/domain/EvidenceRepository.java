@@ -9,5 +9,5 @@ public interface EvidenceRepository {
 
     EvidenceData getEvidenceById(String evidenceId);
 
-    void approveOrRefuseEvidence(String evidenceId, String selection);
+    void approveOrRefuseEvidence(String evidenceId, String selection, String observation);
 }

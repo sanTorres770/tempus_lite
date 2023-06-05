@@ -15,5 +15,7 @@ public class EvidenceData {
     private String fkTask;
     private String taskDescription;
     private String approved;
+    private String createdBy;
+    private String createdByName;
 
 }

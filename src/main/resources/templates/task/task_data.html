@@ -33,12 +33,10 @@
                         <td class="text-center" colspan="2"><span th:text="${taskData.finalDate}"></span></td>
                     </tr>
                     <tr class="table-primary">
-                        <th scope="col" colspan="2" class="text-center text-uppercase">Asignado por</th>
-                        <th scope="col" colspan="2" class="text-center text-uppercase">Asignado a</th>
+                        <th scope="col" colspan="4" class="text-center text-uppercase">Asignado por</th>
                     </tr>
                     <tr>
-                        <td class="text-center" colspan="2"><span th:text="${taskData.assignedForName}"></span></td>
-                        <td class="text-center" colspan="2"><span th:text="${taskData.assignedToName}"></span></td>
+                        <td class="text-center" colspan="4"><span th:text="${taskData.assignedForName}"></span></td>
                     </tr>
                     <tr class="table-primary">
                         <th scope="col" colspan="2" class="text-center text-uppercase">Progreso</th>
@@ -73,7 +71,7 @@
         <table class="table table-bordered table-hover" th:if="${evidenceDataList.size() > 0}">
             <thead>
             <tr style="background-color: #1c3852;color: #b6d4fe;width: 100px">
-                <th scope="col" colspan="5" class="text-center fst-italic"><h3>Evidencias de la tarea</h3></th>
+                <th scope="col" colspan="6" class="text-center fst-italic"><h3>Evidencias de la tarea</h3></th>
             </tr>
             </thead>
             <tbody>
@@ -81,6 +79,7 @@
                 <th scope="col" class="text-center text-uppercase">#</th>
                 <th scope="col" class="text-center text-uppercase">Fecha y hora de creación</th>
                 <th scope="col" class="text-center text-uppercase">Progreso reportado</th>
+                <th scope="col" class="text-center text-uppercase">Creada por</th>
                 <th scope="col" class="text-center text-uppercase">Estado</th>
                 <th scope="col" class="text-center text-uppercase">Revisar</th>
             </tr>
@@ -88,6 +87,7 @@
                 <td class="text-center"><span th:text="${state.count}"></span></td>
                 <td class="text-center"><span th:text="${evidence.uploadedAt}"></span></td>
                 <td class="text-center"><span th:text="${evidence.progress + ' %'}"></span></td>
+                <td class="text-center"><span th:text="${evidence.createdByName}"></span></td>
                 <td class="text-center bg-success" th:if="${evidence.approved.equals('A')}">Aprobada</td>
                 <td class="text-center bg-danger" th:if="${evidence.approved.equals('N')}">No aprobada</td>
                 <td class="text-center bg-warning" th:if="${evidence.approved.equals('P')}">Pendiente de aprobación</td>
@@ -99,7 +99,7 @@
             </tr>
             </tbody>
         </table>
-        <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#evidenceFormModal" sec:authorize="hasRole('ROLE_OPERATOR')">
+        <button th:if="${!taskData.finished}" class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#evidenceFormModal" sec:authorize="hasRole('ROLE_OPERATOR')">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                 <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
@@ -126,5 +126,10 @@
 </div>
 
 <footer th:replace="layout/layout :: footer"></footer>
+<script th:src="@{/js/jquery.validate.min.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+<script th:src="@{/js/messages_es.js}"></script>
+<script th:src="@{/js/form-validation.js}"></script>
+
 </body>
 </html>

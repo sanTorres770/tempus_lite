@@ -32,6 +32,7 @@ public class EvidencePgsql implements EvidenceRepository {
             map.addValue("progress",evidence.getProgress());
             map.addValue("fkTask",evidence.getFkTask());
             map.addValue("approved",evidence.getApproved());
+            map.addValue("createdBy",evidence.getCreatedBy());
 
             String sql = "insert into bd_1.evidences values (" +
                     " :id," +
@@ -40,7 +41,8 @@ public class EvidencePgsql implements EvidenceRepository {
                     " :observation," +
                     " :fkTask," +
                     " :progress," +
-                    " :approved)";
+                    " :approved," +
+                    " :createdBy)";
 
             return jdbcTemplate.update(sql,map) > 0;
 
@@ -57,8 +59,10 @@ public class EvidencePgsql implements EvidenceRepository {
 
         map.addValue("fkTask",fkTask);
 
-        String sql = "select e.*, t.description as task_description from bd_1.evidences e " +
+        String sql = "select e.*, t.description as task_description, upper(concat(em.name,' ',em.last_name)) as created_by_name " +
+                " from bd_1.evidences e " +
                 " join bd_1.tasks t on t.id = e.fk_task " +
+                " join bd_1.employees em on em.document_id = e.created_by " +
                 " where fk_task = :fkTask";
 
         return jdbcTemplate.query(sql,map, new EvidenceDataRowMapper());
@@ -71,22 +75,25 @@ public class EvidencePgsql implements EvidenceRepository {
 
         map.addValue("evidenceId",evidenceId);
 
-        String sql = "select e.*, t.description as task_description from bd_1.evidences e " +
+        String sql = "select e.*, t.description as task_description, upper(concat(em.name,' ',em.last_name)) as created_by_name " +
+                " from bd_1.evidences e " +
                 " join bd_1.tasks t on t.id = e.fk_task " +
+                " join bd_1.employees em on em.document_id = e.created_by " +
                 " where e.id = :evidenceId";
 
         return jdbcTemplate.queryForObject(sql,map, new EvidenceDataRowMapper());
     }
 
     @Override
-    public void approveOrRefuseEvidence(String evidenceId, String selection) {
+    public void approveOrRefuseEvidence(String evidenceId, String selection, String observation) {
 
         MapSqlParameterSource map = new MapSqlParameterSource();
 
         map.addValue("evidenceId",evidenceId);
         map.addValue("selection",selection);
+        map.addValue("observation",observation);
 
-        String sql = " update bd_1.evidences set approved = :selection where id=:evidenceId ";
+        String sql = " update bd_1.evidences set approved = :selection, observation = concat(observation,' ',:observation) where id=:evidenceId ";
 
         jdbcTemplate.update(sql,map);
 

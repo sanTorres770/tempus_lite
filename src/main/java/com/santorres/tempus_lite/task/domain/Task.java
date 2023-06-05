@@ -17,6 +17,5 @@ public class Task {
     private boolean finished;
     private String observation;
     private String fkAssignedFor;
-    private String fkAssignedTo;
     private String fkGoal;
 }

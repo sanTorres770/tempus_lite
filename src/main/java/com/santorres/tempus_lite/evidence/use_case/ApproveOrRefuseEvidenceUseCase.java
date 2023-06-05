@@ -12,7 +12,7 @@ public class ApproveOrRefuseEvidenceUseCase {
         this.evidenceRepository = evidenceRepository;
     }
 
-    public void approveOrRefuseEvidence(String evidenceId, String selection){
-        evidenceRepository.approveOrRefuseEvidence(evidenceId, selection);
+    public void approveOrRefuseEvidence(String evidenceId, String selection, String observation){
+        evidenceRepository.approveOrRefuseEvidence(evidenceId, selection, observation);
     }
 }

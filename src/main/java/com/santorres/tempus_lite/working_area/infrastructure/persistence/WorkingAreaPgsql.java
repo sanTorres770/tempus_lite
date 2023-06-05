@@ -4,6 +4,7 @@ import com.santorres.tempus_lite.employee.infrastructure.persistence.EmployeeDat
 import com.santorres.tempus_lite.working_area.domain.WorkingArea;
 import com.santorres.tempus_lite.working_area.domain.WorkingAreaData;
 import com.santorres.tempus_lite.working_area.domain.WorkingAreaRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -34,6 +35,7 @@ public class WorkingAreaPgsql implements WorkingAreaRepository {
                     ":name, " +
                     ":fkAreaBoss)";
 
+
             return jdbcTemplate.update(sql,map) > 0;
 
         }catch (Exception e){
@@ -51,6 +53,29 @@ public class WorkingAreaPgsql implements WorkingAreaRepository {
                 " join bd_1.employees e on e.document_id = areas.fk_area_boss";
 
         return jdbcTemplate.query(sql, new WorkingAreaDataRowMapper());
+    }
+
+    @Override
+    public WorkingAreaData getWorkingAreaByHead(String headAreaId) {
+
+        try {
+
+            MapSqlParameterSource map = new MapSqlParameterSource();
+
+            map.addValue("headAreaId",headAreaId);
+
+            String sql = " select areas.*, upper(concat(e.name , ' ' , e.last_name)) as boss_name " +
+                    " from bd_1.areas " +
+                    " join bd_1.employees e on e.document_id = areas.fk_area_boss" +
+                    " where areas.fk_area_boss = :headAreaId";
+
+            return jdbcTemplate.queryForObject(sql, map, new WorkingAreaDataRowMapper());
+
+        }catch (EmptyResultDataAccessException e){
+            System.out.println(e.getMessage());
+        }
+
+        return null;
     }
 
 }

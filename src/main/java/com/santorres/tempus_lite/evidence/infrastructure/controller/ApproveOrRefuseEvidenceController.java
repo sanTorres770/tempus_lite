@@ -2,36 +2,47 @@ package com.santorres.tempus_lite.evidence.infrastructure.controller;
 
 import com.santorres.tempus_lite.evidence.use_case.ApproveOrRefuseEvidenceUseCase;
 import com.santorres.tempus_lite.task.domain.TaskRepository;
+import com.santorres.tempus_lite.user.domain.User;
+import com.santorres.tempus_lite.user.use_case.GetUserByUserNameUseCase;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Map;
 
 @Controller
 public class ApproveOrRefuseEvidenceController {
 
     private final ApproveOrRefuseEvidenceUseCase approveOrRefuseEvidenceUseCase;
     private final TaskRepository taskRepository;
+    private final GetUserByUserNameUseCase getUserByUserNameUseCase;
 
-    public ApproveOrRefuseEvidenceController(ApproveOrRefuseEvidenceUseCase approveOrRefuseEvidenceUseCase, TaskRepository taskRepository) {
+
+    public ApproveOrRefuseEvidenceController(ApproveOrRefuseEvidenceUseCase approveOrRefuseEvidenceUseCase, TaskRepository taskRepository, GetUserByUserNameUseCase getUserByUserNameUseCase) {
         this.approveOrRefuseEvidenceUseCase = approveOrRefuseEvidenceUseCase;
         this.taskRepository = taskRepository;
+        this.getUserByUserNameUseCase = getUserByUserNameUseCase;
     }
 
-    @GetMapping("/evidence/approve/{fkTask}/{selection}/{evidenceId}")
-    public String approve(@PathVariable String selection, @PathVariable String fkTask,
-                          @PathVariable String evidenceId, RedirectAttributes flash){
+    @PutMapping("/evidence/approve")
+    public String approve(@RequestParam Map<String,String> body, RedirectAttributes flash, Authentication authentication){
 
-        String selectionFinal = selection.split(":")[0];
+        String username = authentication.getName();
 
-        approveOrRefuseEvidenceUseCase.approveOrRefuseEvidence(evidenceId,selectionFinal);
+        User user = getUserByUserNameUseCase.getUserByUserName(username);
+
+        String employeeName = user.getName() + " " + user.getLastName();
+
+        approveOrRefuseEvidenceUseCase.approveOrRefuseEvidence(body.get("evidenceId"), body.get("selection"), " // " + employeeName + ": " + body.get("observation"));
 
 
-        if (selectionFinal.equals("A")){
+        if (body.get("selection").equals("A")){
 
-            double progress = Double.parseDouble(selection.split(":")[1]);
+            double progress = Double.parseDouble(body.get("progress"));
 
-            taskRepository.updateTaskProgress(fkTask,progress);
+            taskRepository.updateTaskAndGoalProgress(body.get("fkTask"), progress);
 
             flash.addFlashAttribute("info","La evidencia fue aprobada correctamente.");
 
@@ -42,7 +53,7 @@ public class ApproveOrRefuseEvidenceController {
         }
 
 
-        return "redirect:/task/get/"+fkTask;
+        return "redirect:/task/get/"+body.get("fkTask");
 
     }
 

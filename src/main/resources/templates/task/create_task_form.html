@@ -8,8 +8,8 @@
     <a th:href="@{'/'}" class="btn btn-dark mx-0 float-right">Regresar</a>
 </div>
 
-<div class="container shadow p-3 mb-5 rounded">
-    <h3 class="text-center fst-italic text-white">Crear nueva tarea</h3>
+<div class="container shadow p-3 mb-5 rounded" style="background-color: #ceddf6">
+    <h3 class="text-center fst-italic">Crear nueva tarea</h3>
     <form th:action="@{/task/save}" id="wizard" method="post">
         <div class="row g-2 mb-2 animate__animated animate__fadeIn">
             <div class="col-md">
@@ -34,23 +34,12 @@
             </div>
         </div>
         <div class="row g-2 mb-2 animate__animated animate__fadeIn">
-            <div class="form-floating">
-                <select class="form-select input-centered" id="fkAssignedTo" name="fkAssignedTo" aria-label="fkAssignedTo">
-                    <option value="" th:if="${operators.size() == 0}">** No hay empleados asignados al área por el momento **</option>
-                    <option value="" th:if="${operators.size() > 0}">-- Seleccione --</option>
-                    <option th:each="item: ${operators}" th:text="${item.name + ' ' + item.lastName}"
-                            th:value="${item.documentId}"></option>
-                </select>
-                <label for="fkAssignedTo">Asignar operador *</label>
-            </div>
-        </div>
-        <div class="row g-2 mb-2 animate__animated animate__fadeIn">
             <div class="col-md">
                 <div class="form-floating">
                     <textarea class="form-control" name="observation" id="observation" style="height: 100px; width: 100%"></textarea>
                     <label for="observation">Observación</label>
                 </div>
-                <p class="text-white">(*) Obligatorio</p>
+                <p>(*) Obligatorio</p>
             </div>
         </div>
         <div class="text-center mt-4">

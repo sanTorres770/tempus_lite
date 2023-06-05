@@ -1,6 +1,7 @@
 package com.santorres.tempus_lite.working_area.infrastructure.controller;
 
 import com.santorres.tempus_lite.employee.domain.EmployeeData;
+import com.santorres.tempus_lite.employee.domain.EmployeeRepository;
 import com.santorres.tempus_lite.employee.use_case.GetHeadAreaEmployeesUseCase;
 import com.santorres.tempus_lite.working_area.use_case.SaveNewWorkingAreaUseCase;
 import org.springframework.stereotype.Controller;
@@ -19,10 +20,12 @@ public class SaveNewWorkingAreaController {
 
     private final GetHeadAreaEmployeesUseCase getHeadAreaEmployeesUseCase;
     private final SaveNewWorkingAreaUseCase saveNewWorkingAreaUseCase;
+    private final EmployeeRepository employeeRepository;
 
-    public SaveNewWorkingAreaController(GetHeadAreaEmployeesUseCase getHeadAreaEmployeesUseCase, SaveNewWorkingAreaUseCase saveNewWorkingAreaUseCase) {
+    public SaveNewWorkingAreaController(GetHeadAreaEmployeesUseCase getHeadAreaEmployeesUseCase, SaveNewWorkingAreaUseCase saveNewWorkingAreaUseCase, EmployeeRepository employeeRepository) {
         this.getHeadAreaEmployeesUseCase = getHeadAreaEmployeesUseCase;
         this.saveNewWorkingAreaUseCase = saveNewWorkingAreaUseCase;
+        this.employeeRepository = employeeRepository;
     }
 
     @GetMapping("/area/form")

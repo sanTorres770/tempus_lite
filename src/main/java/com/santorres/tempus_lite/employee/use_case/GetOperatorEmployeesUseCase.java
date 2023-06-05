@@ -18,4 +18,18 @@ public class GetOperatorEmployeesUseCase {
     public List<EmployeeData> getOperatorEmployeesByArea(String fkArea){
         return employeeRepository.getOperatorEmployeesByArea(fkArea);
     }
+
+    public List<EmployeeData> getOperatorEmployeesAvailable() {
+        return employeeRepository.getOperatorEmployeesAvailable();
+    }
+
+    public List<EmployeeData> getOperatorEmployeesByTask(String fkTask) {
+        return employeeRepository.getOperatorEmployeesByTask(fkTask);
+
+    }
+
+    public List<EmployeeData> getOperatorEmployeesAvailableByArea(String fkArea) {
+        return employeeRepository.getOperatorEmployeesAvailableByArea(fkArea);
+
+    }
 }

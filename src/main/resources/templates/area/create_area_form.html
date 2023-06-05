@@ -7,8 +7,8 @@
 <div class="mx-5 my-3" th:include="layout/return_button::return_button"></div>
 
 
-<div class="container shadow p-3 mb-5 rounded">
-    <h3 class="text-center fst-italic text-white">Crear nueva área de trabajo</h3>
+<div class="container shadow p-3 mb-5 rounded" style="background-color: #ceddf6">
+    <h3 class="text-center fst-italic">Crear nueva área de trabajo</h3>
     <form th:action="@{/area/save}" id="wizard" method="post">
         <div class="row g-2 mb-2 animate__animated animate__fadeIn">
             <div class="col-md">
@@ -20,14 +20,15 @@
             <div class="col-md">
                 <div class="form-floating">
                     <select class="form-select input-centered" id="fkAreaBoss" name="fkAreaBoss" aria-label="fkAreaBoss">
-                        <option value="">-- Seleccione --</option>
+                        <option value="" th:if="${areaHead.size() == 0}">** No existen jefes de área disponibles **</option>
+                        <option value="" th:if="${areaHead.size() > 0}">-- Seleccione --</option>
                         <option th:each="item: ${areaHead}" th:text="${item.name + ' ' + item.lastName}"
                                 th:value="${item.documentId}"></option>
                     </select>
                     <label for="fkAreaBoss">Asignar jefe *</label>
                 </div>
             </div>
-            <p class="text-white">(*) Obligatorio</p>
+            <p>(*) Obligatorio</p>
         </div>
         <div class="text-center mt-4">
             <button th:type="submit" class="btn btn-primary animate__animated animate__bounceInDown">Guardar área de trabajo</button>

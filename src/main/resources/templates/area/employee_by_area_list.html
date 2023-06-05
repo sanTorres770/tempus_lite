@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+
+<body class="body-bg">
+<header th:replace="layout/layout :: header"></header>
+<div class="mx-5 my-3" th:include="layout/return_button::return_button"></div>
+
+
+<div class="container shadow p-3 mb-5 rounded">
+
+    <h3 class="text-center fst-italic" th:if="${employeeDataList.size() > 0}" th:text="'Lista de empleados del área ' + ${employeeDataList.get(0).areaName}"></h3>
+    <p class="text-start text-white fst-italic" th:if="${employeeDataList.size() > 0}" th:text="'Total empleados: ' + ${employeeDataList.size()}"></p>
+    <table class="table table-dark table-bordered border-white table-striped table-hover" th:if="${employeeDataList.size() > 0}">
+        <thead>
+        <tr>
+            <th class="text-center">#</th>
+            <th class="text-center">N° documento</th>
+            <th class="text-center">Nombres</th>
+            <th class="text-center">Apellidos</th>
+            <th class="text-center">Teléfono</th>
+            <th class="text-center">Email</th>
+            <th class="text-center">Cargo</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="table-active" th:each="employee,state: ${employeeDataList}">
+            <td class="text-center" th:text="${state.count}"></td>
+            <td class="text-center" th:text="${employee.documentId}"></td>
+            <td class="text-center" th:text="${employee.name}"></td>
+            <td class="text-center" th:text="${employee.lastName}"></td>
+            <td class="text-center" th:text="${employee.telephone}"></td>
+            <td class="text-center" th:text="${employee.email}"></td>
+            <td class="text-center" th:text="${employee.roleName}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="alert alert-danger" th:if="${employeeDataList.size() == 0}">No hay operarios asignados a esta área!</div>
+
+    <p class="fst-italic text-white">Asignar operario al área</p>
+    <form th:action="@{/employee/assign/area/save}" id="wizard" th:method="put">
+        <input type="text" th:value="${fkArea}" name="fkArea" hidden>
+        <div class="row g-2 mb-2 animate__animated animate__fadeIn">
+            <div class="col-md">
+                <div class="form-floating">
+                    <select class="form-select input-centered" id="employeeId" name="employeeId" aria-label="employeeId">
+                        <option th:if="${operators.size() == 0}" value="">** No hay operarios disponibles **</option>
+                        <option th:if="${operators.size() > 0}" value="">-- Seleccione --</option>
+                        <option th:each="item: ${operators}" th:text="${item.name + ' ' + item.lastName}"
+                                th:value="${item.documentId}"></option>
+                    </select>
+                    <label for="employeeId">Seleccionar empleado *</label>
+                </div>
+                <p class="text-white">(*) Obligatorio</p>
+            </div>
+            <div class="col-md">
+                <div class="text-start">
+                    <button class="btn btn-success mt-2" type="submit">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
+                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                            <path d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z"/>
+                        </svg>
+                        Asignar empleado
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<footer th:replace="layout/layout :: footer"></footer>
+<script th:src="@{/js/jquery.validate.min.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+<script th:src="@{/js/messages_es.js}"></script>
+<script th:src="@{/js/form-validation.js}"></script>
+
+</body>
+</html>

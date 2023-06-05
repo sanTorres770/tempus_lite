@@ -1,6 +1,9 @@
 package com.santorres.tempus_lite.evidence.infrastructure.controller;
 
 import com.santorres.tempus_lite.evidence.use_case.SaveNewEvidenceUseCase;
+import com.santorres.tempus_lite.user.domain.User;
+import com.santorres.tempus_lite.user.use_case.GetUserByUserNameUseCase;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,9 +24,11 @@ import java.util.UUID;
 @Controller
 public class SaveNewEvidenceController {
     private final SaveNewEvidenceUseCase saveNewEvidenceUseCase;
+    private final GetUserByUserNameUseCase getUserByUserNameUseCase;
 
-    public SaveNewEvidenceController(SaveNewEvidenceUseCase saveNewEvidenceUseCase) {
+    public SaveNewEvidenceController(SaveNewEvidenceUseCase saveNewEvidenceUseCase, GetUserByUserNameUseCase getUserByUserNameUseCase) {
         this.saveNewEvidenceUseCase = saveNewEvidenceUseCase;
+        this.getUserByUserNameUseCase = getUserByUserNameUseCase;
     }
 
     @GetMapping("/evidence/form/{fkTask}")
@@ -36,44 +41,56 @@ public class SaveNewEvidenceController {
     }
 
     @PostMapping("/evidence/save")
-    public String save(@RequestParam Map<String,String> body, @RequestParam("fileName") MultipartFile dataImage, RedirectAttributes flash) {
+    public String save(@RequestParam Map<String,String> body, @RequestParam("fileName") MultipartFile dataImage,
+                       RedirectAttributes flash, Authentication authentication) {
 
-            if (!dataImage.isEmpty()) {
 
-                String uniqueFileName = UUID.randomUUID() + "_" + trimImageName(Objects.requireNonNull(dataImage.getOriginalFilename()));
-                String rootPath = "C:\\Users\\sanpe\\OneDrive\\Desktop\\uploads";
+        String username = authentication.getName();
 
-                body.put("dataImage", uniqueFileName);
+        User user = getUserByUserNameUseCase.getUserByUserName(username);
 
-                try {
+        String employeeName = user.getName() + " " + user.getLastName();
 
-                    if (saveNewEvidenceUseCase.saveNewEvidence(body)) {
-                        byte[] bytes = dataImage.getBytes();
-                        Path allPath = Paths.get(rootPath + "//" + uniqueFileName);
-                        Files.write(allPath, bytes);
+        body.put("createdBy",user.getId());
+        body.put("employeeName",employeeName);
 
-                        flash.addFlashAttribute("success", "La evidencia se guardó correctamente.");
-                        flash.addFlashAttribute("info", "Se subió correctamente la imágen de la evidencia '" + dataImage.getOriginalFilename() + "'");
 
-                    } else {
-                        flash.addFlashAttribute("error", "La información no se guardó. Revise y vuelva a intentarlo.");
-                        flash.addFlashAttribute("info", "La imágen no se subió correctamente. Reduzca el nombre del archivo y revise el formato para volver a intentarlo en la opción 'Editar toma de datos'.");
-                    }
+        if (!dataImage.isEmpty()) {
 
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
+            String uniqueFileName = UUID.randomUUID() + "_" + trimImageName(Objects.requireNonNull(dataImage.getOriginalFilename()));
+            String rootPath = "C:\\Users\\sanpe\\OneDrive\\Desktop\\uploads";
 
-                }
-            }else {
+            body.put("dataImage", uniqueFileName);
+
+            try {
 
                 if (saveNewEvidenceUseCase.saveNewEvidence(body)) {
+                    byte[] bytes = dataImage.getBytes();
+                    Path allPath = Paths.get(rootPath + "//" + uniqueFileName);
+                    Files.write(allPath, bytes);
 
                     flash.addFlashAttribute("success", "La evidencia se guardó correctamente.");
+                    flash.addFlashAttribute("info", "Se subió correctamente la imágen de la evidencia '" + dataImage.getOriginalFilename() + "'");
 
                 } else {
                     flash.addFlashAttribute("error", "La información no se guardó. Revise y vuelva a intentarlo.");
+                    flash.addFlashAttribute("info", "La imágen no se subió correctamente. Reduzca el nombre del archivo y revise el formato para volver a intentarlo en la opción 'Editar toma de datos'.");
                 }
+
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+
             }
+        }else {
+
+            if (saveNewEvidenceUseCase.saveNewEvidence(body)) {
+
+                flash.addFlashAttribute("success", "La evidencia se guardó correctamente.");
+
+            } else {
+                flash.addFlashAttribute("error", "La información no se guardó. Revise y vuelva a intentarlo.");
+            }
+        }
 
         return "redirect:/task/get/"+body.get("fkTask");
 

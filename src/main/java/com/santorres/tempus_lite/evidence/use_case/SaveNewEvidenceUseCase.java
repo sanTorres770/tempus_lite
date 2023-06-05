@@ -29,10 +29,11 @@ public class SaveNewEvidenceUseCase {
                 UUID.randomUUID().toString(),
                 data.get("dataImage"),
                 LocalDateTime.now(),
-                data.get("observation"),
+                data.get("employeeName") + ": " + data.get("observation"),
                 Double.parseDouble(data.get("progress")),
                 data.get("fkTask"),
-                "P"
+                "P",
+                data.get("createdBy")
         );
     }
 }
