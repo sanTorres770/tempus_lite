@@ -7,4 +7,6 @@ public interface LoginRegistryRepository {
     void saveInitialLoginRegistry(LoginRegistry loginRegistry);
 
     List<LoginRegistry> getLoginRegistryByEmployee(String employeeId, LocalDate today);
+
+    boolean saveFinalHourRegistry(String loginRegistryId);
 }

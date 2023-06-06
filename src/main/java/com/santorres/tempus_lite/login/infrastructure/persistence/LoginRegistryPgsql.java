@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
@@ -49,5 +50,18 @@ public class LoginRegistryPgsql implements LoginRegistryRepository {
         String sql = "select * from bd_1.login_register where login_date=:today and fk_employee=:employeeId ";
 
         return jdbcTemplate.query(sql, map, new LoginRegistryRowMapper());
+    }
+
+    @Override
+    public boolean saveFinalHourRegistry(String loginRegistryId) {
+
+        MapSqlParameterSource map = new MapSqlParameterSource();
+
+        map.addValue("id",loginRegistryId);
+        map.addValue("finalHour", LocalTime.now());
+
+        String sql = " update bd_1.login_register set final_hour = :finalHour where id=:id";
+
+        return jdbcTemplate.update(sql,map) > 0;
     }
 }
