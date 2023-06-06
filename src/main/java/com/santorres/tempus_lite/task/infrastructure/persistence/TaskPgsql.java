@@ -3,11 +3,16 @@ package com.santorres.tempus_lite.task.infrastructure.persistence;
 import com.santorres.tempus_lite.task.domain.Task;
 import com.santorres.tempus_lite.task.domain.TaskData;
 import com.santorres.tempus_lite.task.domain.TaskRepository;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -133,12 +138,26 @@ public class TaskPgsql implements TaskRepository {
 
             String sqlEmployeeId = "select fk_employee from bd_1.assigned_tasks where fk_task= :fkTask";
 
-            String employeeId = jdbcTemplate.queryForObject(sqlEmployeeId,map,String.class);
+            List<String> employees = jdbcTemplate.query(sqlEmployeeId, map, rs -> {
+
+                List<String> employees1 = new ArrayList<>();
+
+                while (rs.next()){
+
+                    employees1.add(rs.getString("fk_employee"));
+                }
+
+                return employees1;
+            });
 
 
             // liberar al operario al terminar la tarea, creando un nuevo registro de asigancion
 
-            assignTaskNullToEmployee(employeeId, null, null);
+            for (String employeeId: employees) {
+
+                assignTaskNullToEmployee(employeeId, null, null);
+            }
+
 
 
         }

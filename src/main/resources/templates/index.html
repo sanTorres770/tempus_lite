@@ -18,11 +18,62 @@
             <div class="carousel-item active" data-bs-interval="5000">
                 <div class="container text-center">
                     <h1 class="fst-italic fw-bold">Turno de trabajo</h1>
-                    <strong th:text="${'Turno ' + workshift.id + ' => Hora de entrada: ' + workshift.initialHour + ' - Hora de salida: ' + workshift.finalHour}"></strong>
+                    <p><strong th:text="${'Turno ' + workshift.id + ' => Hora de entrada: ' + workshift.initialHour + ' - Hora de salida: ' + workshift.finalHour}"></strong></p>
+                    <p><strong th:text="${'Duración del turno (hora de break incluida): ' + hours + ' horas y ' + #numbers.formatDecimal(minutes,1,0) + ' minutos'}"></strong></p>
                     <p th:text="${'Fecha actual: ' + today}"></p>
                     <p th:text="${'Hora de inicio de turno: ' + loginRegistry.loginHour}"></p>
-                    <!--<p th:text="${'Tiempo transcurrido: ' + elapsedTime}"></p>
-                    <p th:text="${'Tiempo restante: ' + remainingTime}"></p>-->
+                    <p><strong th:text="${'Su turno finaliza en: ' + remainingHours + ' horas y ' + #numbers.formatDecimal(remainingMinutes,1,0) + ' minutos'}"></strong></p>
+                    <p><strong th:text="${'Tiempo transcurrido desde inicio de sesión: ' + elapsedHours + ' horas y ' + #numbers.formatDecimal(elapsedMinutes,1,0) + ' minutos'}"></strong></p>
+
+
+                    <a class="btn btn-outline-danger" th:href="@{'/finish/' + ${loginRegistry.getId()}}" th:if="${completedTime && loginRegistry.finalHour == null}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-escape" viewBox="0 0 16 16">
+                            <path d="M8.538 1.02a.5.5 0 1 0-.076.998 6 6 0 1 1-6.445 6.444.5.5 0 0 0-.997.076A7 7 0 1 0 8.538 1.02Z"/>
+                            <path d="M7.096 7.828a.5.5 0 0 0 .707-.707L2.707 2.025h2.768a.5.5 0 1 0 0-1H1.5a.5.5 0 0 0-.5.5V5.5a.5.5 0 0 0 1 0V2.732l5.096 5.096Z"/>
+                        </svg>
+                        Finalizar turno
+                    </a>
+
+                </div>
+            </div>
+            <div class="carousel-item" data-bs-interval="5000">
+
+                <div class="container text-center">
+                    <h1 class="fst-italic fw-bold mb-4">Estadísticas</h1>
+                    <p><strong th:text="${'*Ingrese el rango de fechas para generar los datos'}"></strong></p>
+
+                    <form th:action="@{/stats}" id="wizard" th:method="put">
+
+                        <div class="d-flex align-items-center justify-content-center">
+
+                            <div class="row g-2 w-50">
+                                <div class="col-md">
+                                    <div class="form-floating">
+                                        <input class="form-control" type="date" name="initialDate" id="initialDate" placeholder="Desde *">
+                                        <label class="form-label" for="initialDate">Desde *</label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-floating">
+                                        <input class="form-control" type="date" name="finalDate" id="finalDate" placeholder="Hasta *">
+                                        <label class="form-label" for="finalDate">Hasta *</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="flex-column my-5">
+                            <button type="submit" class="btn btn-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-binoculars" viewBox="0 0 16 16">
+                                    <path d="M3 2.5A1.5 1.5 0 0 1 4.5 1h1A1.5 1.5 0 0 1 7 2.5V5h2V2.5A1.5 1.5 0 0 1 10.5 1h1A1.5 1.5 0 0 1 13 2.5v2.382a.5.5 0 0 0 .276.447l.895.447A1.5 1.5 0 0 1 15 7.118V14.5a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 14.5v-3a.5.5 0 0 1 .146-.354l.854-.853V9.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v.793l.854.853A.5.5 0 0 1 7 11.5v3A1.5 1.5 0 0 1 5.5 16h-3A1.5 1.5 0 0 1 1 14.5V7.118a1.5 1.5 0 0 1 .83-1.342l.894-.447A.5.5 0 0 0 3 4.882V2.5zM4.5 2a.5.5 0 0 0-.5.5V3h2v-.5a.5.5 0 0 0-.5-.5h-1zM6 4H4v.882a1.5 1.5 0 0 1-.83 1.342l-.894.447A.5.5 0 0 0 2 7.118V13h4v-1.293l-.854-.853A.5.5 0 0 1 5 10.5v-1A1.5 1.5 0 0 1 6.5 8h3A1.5 1.5 0 0 1 11 9.5v1a.5.5 0 0 1-.146.354l-.854.853V13h4V7.118a.5.5 0 0 0-.276-.447l-.895-.447A1.5 1.5 0 0 1 12 4.882V4h-2v1.5a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V4zm4-1h2v-.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5V3zm4 11h-4v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5V14zm-8 0H2v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5V14z"/>
+                                </svg>
+                                Buscar
+                            </button>
+                        </div>
+
+                    </form>
+
                 </div>
             </div>
         </div>

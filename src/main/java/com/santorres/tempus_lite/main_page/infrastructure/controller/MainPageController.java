@@ -15,8 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.TemporalAmount;
-import java.time.temporal.TemporalUnit;
+
 import java.util.List;
 
 @Controller
@@ -39,6 +38,8 @@ public class MainPageController {
 
         try {
 
+            // si esta autenticado se busca el registro de login de la fecha actual
+
             if (authentication.isAuthenticated()){
 
 
@@ -49,6 +50,9 @@ public class MainPageController {
                 LocalDate today = LocalDate.now();
 
                 List<LoginRegistry> loginRegistryList = getLoginRegistryByEmployeeUseCase.getLoginRegistryByEmployee(user.getId(), today);
+
+
+                // si no tiene login en la fecha actual, se crea el registro y se obtiene para luego usarlo en el calculo de horas de trabajo
 
                 if (loginRegistryList.size() == 0) {
 
@@ -62,18 +66,62 @@ public class MainPageController {
 
                 }
 
+                //se obtiene el horario que fue asignado para calcular las horas de trabajo
+
                 Workshift workshift = getWorkshiftByEmployeeUseCase.getWorkshiftByEmployee(user.getId());
                 LoginRegistry loginRegistry = loginRegistryList.get(0);
 
-                LocalTime elapsedTime = LocalTime.now().minusHours(loginRegistry.getLoginHour().getHour());
-                LocalTime remainingTime = workshift.getFinalHour().minusHours(LocalTime.now().getHour());
+
+                // se calculan los minutos de diferencia entre entrada y salida, se convierten luego a horas y minutos separados.
+                // calculando si la hora de entrada es mayor a la de salida, es decir, si el turno empieza desde el dia anterior
+
+
+                double initialMinutes = ((workshift.getInitialHour().getHour() * 60) + workshift.getInitialHour().getMinute());
+                double finalMinutes = ((workshift.getFinalHour().getHour() * 60) + (workshift.getFinalHour().getMinute()));
+
+                double workHoursInMinutes = 0;
+
+                if (workshift.getInitialHour().isAfter(workshift.getFinalHour())){
+
+                    workHoursInMinutes = (1440 - initialMinutes) + finalMinutes -60;
+
+                }else {
+
+                    workHoursInMinutes = finalMinutes - initialMinutes - 60;
+                }
+
+                String workHoursFormatted = workHoursInMinutes / 60 + "00";
+                String[] minutesAndHours = workHoursFormatted.split("\\.");
+
+                // se calcula el tiempo en minutos de entrada y minutos actuales para saber si ya se completo el turno
+                // y para mostrar tiempo restante y transcurrido desde el login.
+
+                double currentMinutes = ((LocalTime.now().getHour()*60) + LocalTime.now().getMinute());
+                double loginMinutes = ((loginRegistry.getLoginHour().getHour()*60)+loginRegistry.getLoginHour().getMinute());
+                double elapsedTurnTime = currentMinutes - initialMinutes;
+
+                boolean completedTime = currentMinutes >= finalMinutes;
+
+                double remainingTime = finalMinutes - elapsedTurnTime -60;
+
+                double elapsedLoginTime = currentMinutes - loginMinutes;
+
+                String remainingTimeFormatted = remainingTime /60 + "00";
+                String[] remainingTimeInMinutesAndHours = remainingTimeFormatted.split("\\.");
+
+                String elapsedLoginTimeFormatted = elapsedLoginTime /60 + "00";
+                String[] elapsedLoginTimeInMinutesAndHours = elapsedLoginTimeFormatted.split("\\.");
 
                 model.addAttribute("loginRegistry", loginRegistry);
                 model.addAttribute("workshift", workshift);
                 model.addAttribute("today", today);
-                model.addAttribute("elapsedTime", elapsedTime.getHour() + ":" + elapsedTime.getMinute() + ":" + elapsedTime.getSecond());
-                model.addAttribute("remainingTime", remainingTime.getHour() + ":" + remainingTime.getMinute() + ":" + remainingTime.getSecond());
-
+                model.addAttribute("completedTime", completedTime);
+                model.addAttribute("hours", minutesAndHours[0]);
+                model.addAttribute("minutes", (Double.parseDouble(minutesAndHours[1].substring(0,2))/100)*60);
+                model.addAttribute("remainingHours", remainingTimeInMinutesAndHours[0]);
+                model.addAttribute("remainingMinutes", (Double.parseDouble(remainingTimeInMinutesAndHours[1].substring(0,2))/100)*60);
+                model.addAttribute("elapsedHours", elapsedLoginTimeInMinutesAndHours[0]);
+                model.addAttribute("elapsedMinutes", (Double.parseDouble(elapsedLoginTimeInMinutesAndHours[1].substring(0,2))/100)*60);
 
             }else {
                 return "/login";
