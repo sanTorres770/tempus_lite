@@ -1,6 +1,6 @@
 package com.santorres.tempus_lite.login.infrastructure.persistence;
 
-import com.santorres.tempus_lite.login.domain.LoginRegistry;
+import com.santorres.tempus_lite.login.domain.LoginRegistryData;
 import com.santorres.tempus_lite.shared.domian.ConvertToDate;
 import com.santorres.tempus_lite.shared.domian.ConvertToLocalTime;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,22 +10,28 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class LoginRegistryRowMapper implements RowMapper<LoginRegistry> {
+public class LoginRegistryDataRowMapper implements RowMapper<LoginRegistryData> {
     @Override
-    public LoginRegistry mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public LoginRegistryData mapRow(ResultSet rs, int rowNum) throws SQLException {
 
         String id = rs.getString("id");
         LocalDate loginDate = ConvertToDate.convert(rs.getDate("login_date"));
         LocalTime loginHour = ConvertToLocalTime.convert(rs.getTime("login_hour"));
         LocalTime finalHour = ConvertToLocalTime.convert(rs.getTime("final_hour"));
         String fkEmployee = rs.getString("fk_employee");
+        String employeeName = rs.getString("employee_name");
+        String areaName = rs.getString("area_name");
 
-        return new LoginRegistry(
+        return new LoginRegistryData(
                 id,
                 loginDate,
                 loginHour,
                 finalHour,
-                fkEmployee
+                fkEmployee,
+                employeeName,
+                areaName,
+                null,
+                null
         );
     }
 }

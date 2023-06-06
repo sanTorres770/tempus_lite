@@ -1,7 +1,8 @@
 package com.santorres.tempus_lite.main_page.infrastructure.controller;
 
-import com.santorres.tempus_lite.login.domain.LoginRegistry;
+import com.santorres.tempus_lite.login.domain.LoginRegistryData;
 import com.santorres.tempus_lite.login.use_case.GetLoginRegistryByEmployeeUseCase;
+import com.santorres.tempus_lite.login.use_case.GetLoginRegistryListUseCase;
 import com.santorres.tempus_lite.login.use_case.SaveLoginRegistryUseCase;
 import com.santorres.tempus_lite.user.domain.User;
 import com.santorres.tempus_lite.user.use_case.GetUserByUserNameUseCase;
@@ -25,12 +26,14 @@ public class MainPageController {
     private final SaveLoginRegistryUseCase saveLoginRegistryUseCase;
     private final GetLoginRegistryByEmployeeUseCase getLoginRegistryByEmployeeUseCase;
     private final GetWorkshiftByEmployeeUseCase getWorkshiftByEmployeeUseCase;
+    private final GetLoginRegistryListUseCase getLoginRegistryListUseCase;
 
-    public MainPageController(GetUserByUserNameUseCase getUserByUserNameUseCase, SaveLoginRegistryUseCase saveLoginEntranceRegistryUseCase, GetLoginRegistryByEmployeeUseCase getLoginRegistryByEmployeeUseCase, GetWorkshiftByEmployeeUseCase getWorkshiftByEmployeeUseCase) {
+    public MainPageController(GetUserByUserNameUseCase getUserByUserNameUseCase, SaveLoginRegistryUseCase saveLoginEntranceRegistryUseCase, GetLoginRegistryByEmployeeUseCase getLoginRegistryByEmployeeUseCase, GetWorkshiftByEmployeeUseCase getWorkshiftByEmployeeUseCase, GetLoginRegistryListUseCase getLoginRegistryListUseCase) {
         this.getUserByUserNameUseCase = getUserByUserNameUseCase;
         this.saveLoginRegistryUseCase = saveLoginEntranceRegistryUseCase;
         this.getLoginRegistryByEmployeeUseCase = getLoginRegistryByEmployeeUseCase;
         this.getWorkshiftByEmployeeUseCase = getWorkshiftByEmployeeUseCase;
+        this.getLoginRegistryListUseCase = getLoginRegistryListUseCase;
     }
 
     @GetMapping({"/", "/index", "/home"})
@@ -49,7 +52,7 @@ public class MainPageController {
 
                 LocalDate today = LocalDate.now();
 
-                List<LoginRegistry> loginRegistryList = getLoginRegistryByEmployeeUseCase.getLoginRegistryByEmployee(user.getId(), today);
+                List<LoginRegistryData> loginRegistryList = getLoginRegistryByEmployeeUseCase.getLoginRegistryByEmployee(user.getId(), today);
 
 
                 // si no tiene login en la fecha actual, se crea el registro y se obtiene para luego usarlo en el calculo de horas de trabajo
@@ -69,7 +72,7 @@ public class MainPageController {
                 //se obtiene el horario que fue asignado para calcular las horas de trabajo
 
                 Workshift workshift = getWorkshiftByEmployeeUseCase.getWorkshiftByEmployee(user.getId());
-                LoginRegistry loginRegistry = loginRegistryList.get(0);
+                LoginRegistryData loginRegistry = loginRegistryList.get(0);
 
 
                 // se calculan los minutos de diferencia entre entrada y salida, se convierten luego a horas y minutos separados.
@@ -102,7 +105,7 @@ public class MainPageController {
 
                 boolean completedTime = currentMinutes >= finalMinutes;
 
-                double remainingTime = finalMinutes - elapsedTurnTime -60;
+                double remainingTime = workHoursInMinutes - elapsedTurnTime + 60;
 
                 double elapsedLoginTime = currentMinutes - loginMinutes;
 
@@ -122,6 +125,63 @@ public class MainPageController {
                 model.addAttribute("remainingMinutes", (Double.parseDouble(remainingTimeInMinutesAndHours[1].substring(0,2))/100)*60);
                 model.addAttribute("elapsedHours", elapsedLoginTimeInMinutesAndHours[0]);
                 model.addAttribute("elapsedMinutes", (Double.parseDouble(elapsedLoginTimeInMinutesAndHours[1].substring(0,2))/100)*60);
+
+
+                // se obtienen los registros de login del dia
+
+                List<LoginRegistryData> loginRegistryDataList = getLoginRegistryListUseCase.getLoginRegistryList(LocalDate.now(),LocalDate.now());
+
+                // se calculan las horas trabajadas hasta el momento, sumando las horas desde login hasta la hora actual o la hora de salida
+
+                double totalWorkHoursToday = 0;
+                String totalWorkHoursTodayInHours = "";
+                String totalWorkHoursTodayInMinutes = "";
+
+                if (loginRegistryDataList.size() > 0){
+
+
+                    for (LoginRegistryData loginRegistryData: loginRegistryDataList) {
+
+                        double loginHourInMinutes = (loginRegistryData.getLoginHour().getHour()*60)+loginRegistryData.getLoginHour().getMinute();
+                        double currenTimeInMinutes = (LocalTime.now().getHour()*60)+LocalTime.now().getMinute();
+
+                        double elapsedTimeInMinutes = 0;
+
+                        if (loginRegistryData.getFinalHour() == null){
+
+                            elapsedTimeInMinutes = currenTimeInMinutes - loginHourInMinutes;
+                        }else {
+
+                            double finalHourInMinutes = (loginRegistryData.getFinalHour().getHour()*60)+loginRegistryData.getFinalHour().getMinute();
+
+                            elapsedTimeInMinutes = finalHourInMinutes - loginHourInMinutes;
+                        }
+
+
+                        String elapsedTimePerEmployee = elapsedTimeInMinutes /60 + "00";
+                        String[] elapsedTimePerEmployeeInMinutesAndHours = elapsedTimePerEmployee.split("\\.");
+
+                        String workedHoursEmployee = elapsedTimePerEmployeeInMinutesAndHours[0];
+                        double workedMinutesEmployee =  (Double.parseDouble(elapsedTimePerEmployeeInMinutesAndHours[1].substring(0,2))/100)*60;
+
+                        loginRegistryData.setWorkedHours(workedHoursEmployee);
+                        loginRegistryData.setWorkedMinutes(workedMinutesEmployee);
+
+                        totalWorkHoursToday = totalWorkHoursToday + elapsedTimeInMinutes;
+
+                    }
+
+                    String totalWorkHoursTodayFormatted = totalWorkHoursToday /60 + "00";
+                    String[] totalWorkHoursTodayInMinutesAndHours = totalWorkHoursTodayFormatted.split("\\.");
+
+                    totalWorkHoursTodayInHours = totalWorkHoursTodayInMinutesAndHours[0];
+                    totalWorkHoursTodayInMinutes = totalWorkHoursTodayInMinutesAndHours[1].substring(0,2);
+
+                }
+
+                model.addAttribute("todayLoginRegistry", loginRegistryDataList);
+                model.addAttribute("workedHours", totalWorkHoursTodayInHours);
+                model.addAttribute("workedMinutes", (Double.parseDouble(totalWorkHoursTodayInMinutes)/100)*60);
 
             }else {
                 return "/login";

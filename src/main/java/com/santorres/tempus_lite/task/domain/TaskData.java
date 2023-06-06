@@ -22,4 +22,5 @@ public class TaskData {
     private String assignedForName;
     private String goalName;
     private LocalDateTime assignedAt;
+    private String assignedToName;
 }

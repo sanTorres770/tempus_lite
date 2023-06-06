@@ -6,7 +6,9 @@ import java.util.List;
 public interface LoginRegistryRepository {
     void saveInitialLoginRegistry(LoginRegistry loginRegistry);
 
-    List<LoginRegistry> getLoginRegistryByEmployee(String employeeId, LocalDate today);
+    List<LoginRegistryData> getLoginRegistryByEmployee(String employeeId, LocalDate today);
 
     boolean saveFinalHourRegistry(String loginRegistryId);
+
+    List<LoginRegistryData> getLoginRegistryList(LocalDate date, LocalDate date2);
 }

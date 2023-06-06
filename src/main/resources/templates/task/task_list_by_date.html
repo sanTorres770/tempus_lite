@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<body class="body-bg" th:fragment="task_list_by_date">
+
+<div class="alert alert-danger text-uppercase" th:if="${taskDataList.size() == 0}" th:text="${'No hay tareas pendientes para el rango de fechas ingresado'}"></div>
+
+<ul>
+    <li><strong th:text="${'Cantidad total de tareas pendientes: ' + notFinishedTasksNumber}"></strong></li>
+</ul>
+
+<table class="table table-secondary table-bordered border-dark table-hover">
+        <thead>
+        <tr class="table-active">
+            <th scope="col" class="text-center text-uppercase">#</th>
+            <th scope="col" class="text-center text-uppercase">Descripción</th>
+            <th scope="col" class="text-center text-uppercase">Fecha inicial</th>
+            <th scope="col" class="text-center text-uppercase">Fecha final</th>
+            <th scope="col" class="text-center text-uppercase">Progreso</th>
+            <th scope="col" class="text-center text-uppercase">Estado</th>
+            <th scope="col" class="text-center text-uppercase">Asignada por</th>
+            <th scope="col" class="text-center text-uppercase">Asignada a</th>
+            <th scope="col" class="text-center text-uppercase">Objetivo</th>
+            <th scope="col" class="text-center text-uppercase">Fecha y hora de asignación</th>
+            <th scope="col" class="text-center text-uppercase">Vigencia</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="task,state: ${taskDataList}">
+            <td class="text-center" th:text="${state.count}"></td>
+            <td class="text-center" th:text="${task.description}"></td>
+            <td class="text-center" th:text="${task.initialDate}"></td>
+            <td class="text-center" th:text="${task.finalDate}"></td>
+            <td class="text-center" th:text="${task.progress + ' %'}"></td>
+            <td class="text-center" th:if="${task.finished}">Finalizada</td>
+            <td class="text-center" th:if="${!task.finished}">En proceso</td>
+            <td class="text-center" th:text="${task.assignedForName}"></td>
+            <td class="text-center" th:if="${task.assignedToName.isBlank()}" th:text="${'Sin asignar'}"></td>
+            <td class="text-center" th:if="${!(task.assignedToName.isBlank())}" th:text="${task.assignedToName}"></td>
+            <td class="text-center" th:text="${task.goalName}"></td>
+            <td class="text-center" th:if="${task.assignedAt == null}" th:text="${'Sin asignar'}"></td>
+            <td class="text-center" th:if="${!(task.assignedAt == null)}" th:text="${task.assignedAt}"></td>
+            <td class="text-center bg-danger text-uppercase" th:if="${task.finalDate.isBefore(today)}">Vencida</td>
+            <td class="text-center bg-success text-uppercase" th:if="${!(task.finalDate.isBefore(today))}">A tiempo</td>
+        </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

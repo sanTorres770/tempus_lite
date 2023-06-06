@@ -27,6 +27,7 @@ public class TaskDataRowMapper implements RowMapper<TaskData> {
         String assignedForName = rs.getString("assigned_for_name");
         String goalName = rs.getString("goal_name");
         LocalDateTime assignedAt = ConvertToLocalDateTime.convert(rs.getTimestamp("assigned_at"));
+        String assignedToName = rs.getString("assigned_to_name");
 
 
         return new TaskData(
@@ -41,7 +42,8 @@ public class TaskDataRowMapper implements RowMapper<TaskData> {
                 fkGoal,
                 assignedForName,
                 goalName,
-                assignedAt
+                assignedAt,
+                assignedToName
         );
     }
 }

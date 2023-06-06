@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+
+<body class="body-bg">
+<header th:replace="layout/layout :: header"></header>
+<div class="mx-5 my-3">
+    <a th:href="@{'/'}" class="btn btn-secondary mx-0 float-right">Regresar</a>
+</div>
+
+<div class="container shadow p-3 mb-5 rounded">
+    <h3 class="text-center fst-italic" th:text="${'Estadísticas desde ' + initialDate + ' hasta ' + finalDate}"></h3>
+    <div class="accordion" id="accordionPanelsStayOpenExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-heading1">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse1" aria-expanded="true" aria-controls="panelsStayOpen-collapse1" style="background-color: #e7f1ff">
+                        <span class="fw-bold" th:text="${'Tareas por cumplir desde ' + initialDate + ' hasta ' + finalDate}"></span>
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapse1" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-heading1" data-bs-parent="#accordionPanelsStayOpenExample">
+                    <div class="accordion-body">
+                        <div class="container shadow-lg p-3 mb-5 rounded" th:include="task/task_list_by_date::task_list_by_date" style="background-color: rgba(190,185,185,0.49)"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+
+<footer th:replace="layout/layout :: footer"></footer>
+<script th:src="@{/js/jquery.validate.min.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+<script th:src="@{/js/messages_es.js}"></script>
+<script th:src="@{/js/form-validation.js}"></script>
+
+
+</body>
+</html>

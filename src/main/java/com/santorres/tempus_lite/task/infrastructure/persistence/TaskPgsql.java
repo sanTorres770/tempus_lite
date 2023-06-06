@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class TaskPgsql implements TaskRepository {
 
         map.addValue("goalId",goalId);
 
-        String sql = " select t.*, upper(concat(afn.name, ' ', afn.last_name)) as assigned_for_name, null as assigned_at," +
+        String sql = " select t.*, upper(concat(afn.name, ' ', afn.last_name)) as assigned_for_name, null as assigned_at, null as assigned_to_name," +
                 " g.description as goal_name" +
                 " from bd_1.tasks t " +
                 " join bd_1.employees afn on t.fk_assigned_for = afn.document_id " +
@@ -84,7 +85,7 @@ public class TaskPgsql implements TaskRepository {
 
         map.addValue("id",id);
 
-        String sql = " select t.*, upper(concat(afn.name, ' ', afn.last_name)) as assigned_for_name, null as assigned_at," +
+        String sql = " select t.*, upper(concat(afn.name, ' ', afn.last_name)) as assigned_for_name, null as assigned_at, null as assigned_to_name," +
                 " g.description as goal_name" +
                 " from bd_1.tasks t " +
                 " join bd_1.employees afn on t.fk_assigned_for = afn.document_id " +
@@ -101,7 +102,7 @@ public class TaskPgsql implements TaskRepository {
 
         map.addValue("employeeId",employeeId);
 
-        String sql = " select t.*, upper(concat(afn.name, ' ', afn.last_name)) as assigned_for_name, at.assigned_at," +
+        String sql = " select t.*, upper(concat(afn.name, ' ', afn.last_name)) as assigned_for_name, at.assigned_at, null as assigned_to_name," +
                 " g.description as goal_name" +
                 " from bd_1.tasks t " +
                 " join bd_1.employees afn on t.fk_assigned_for = afn.document_id " +
@@ -211,5 +212,44 @@ public class TaskPgsql implements TaskRepository {
             System.out.println(e.getMessage());
 
         }
+    }
+
+    @Override
+    public List<TaskData> getTaskListByDate(LocalDate initialDate, LocalDate finalDate) {
+
+        MapSqlParameterSource map = new MapSqlParameterSource();
+
+        map.addValue("initialDate",initialDate);
+        map.addValue("finalDate",finalDate);
+
+        String sql = " select t.*, upper(concat(afn.name, ' ', afn.last_name)) as assigned_for_name, upper(concat(atn.name, ' ', atn.last_name)) as assigned_to_name," +
+                " at.assigned_at," +
+                " g.description as goal_name" +
+                " from bd_1.tasks t " +
+                " join bd_1.employees afn on t.fk_assigned_for = afn.document_id " +
+                " join bd_1.goals g on g.id = t.fk_goal " +
+                " left outer join bd_1.assigned_tasks at on t.id = at.fk_task" +
+                " left outer join bd_1.employees atn on at.fk_employee = atn.document_id " +
+                " where t.final_date between :initialDate and :finalDate";
+
+        return jdbcTemplate.query(sql,map,new TaskDataRowMapper());
+    }
+
+    @Override
+    public int getNumberOfNotFinishedTasks() {
+
+        try {
+
+            MapSqlParameterSource map = new MapSqlParameterSource();
+
+            String sql = "select count(*) from bd_1.tasks where finished= false";
+
+            return jdbcTemplate.queryForObject(sql,map,Integer.class);
+
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        return 0;
     }
 }

@@ -9,7 +9,7 @@
 
 <div class="container py-5 my-5 shadow-lg rounded bg-sicmys">
 
-    <div id="carouselOperator" class="carousel carousel-dark slide" data-bs-ride="carousel">
+    <div id="carouselOperator" class="carousel carousel-dark slide" data-bs-ride="false">
         <!--<div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselOperator" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
             <button type="button" data-bs-target="#carouselOperator" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -22,7 +22,7 @@
                     <p><strong th:text="${'Duración del turno (hora de break incluida): ' + hours + ' horas y ' + #numbers.formatDecimal(minutes,1,0) + ' minutos'}"></strong></p>
                     <p th:text="${'Fecha actual: ' + today}"></p>
                     <p th:text="${'Hora de inicio de turno: ' + loginRegistry.loginHour}"></p>
-                    <p><strong th:text="${'Su turno finaliza en: ' + remainingHours + ' horas y ' + #numbers.formatDecimal(remainingMinutes,1,0) + ' minutos'}"></strong></p>
+                    <p><strong th:text="${'Su turno finaliza en: ' + remainingHours + ' horas y ' + #numbers.formatDecimal(remainingMinutes,1,0) + ' minutos'}" th:if="${!completedTime}"></strong></p>
                     <p><strong th:text="${'Tiempo transcurrido desde inicio de sesión: ' + elapsedHours + ' horas y ' + #numbers.formatDecimal(elapsedMinutes,1,0) + ' minutos'}"></strong></p>
 
 
@@ -36,7 +36,51 @@
 
                 </div>
             </div>
-            <div class="carousel-item" data-bs-interval="5000">
+            <div class="carousel-item" data-bs-interval="5000" sec:authorize="hasAnyRole('ROLE_MANAGER','ROLE_AREAHEAD')">
+
+                <div class="container-sm text-center w-75">
+                    <h1 class="fst-italic fw-bold mb-4" th:text="${'Inicios de sesión hoy ' + today}"></h1>
+
+                    <p class="text-start text-white fst-italic" th:if="${todayLoginRegistry.size() > 0}" th:text="'Total inicios de sesión hoy: ' + ${todayLoginRegistry.size()}"></p>
+
+                    <div class="alert alert-danger" th:if="${todayLoginRegistry.size() == 0}" th:text="${'No hay registros de inicio de sesión el dia de hoy ' + today}"></div>
+                    <table class="table table-dark table-bordered border-white table-striped table-hover" th:if="${todayLoginRegistry.size() > 0}">
+                        <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Fecha de login</th>
+                            <th class="text-center">Hora de entrada</th>
+                            <th class="text-center">Nombre empleado</th>
+                            <th class="text-center">Área asignada</th>
+                            <th class="text-center">Hora de salida</th>
+                            <th class="text-center">Horas trabajadas</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="table-active" th:each="login,state: ${todayLoginRegistry}">
+                            <td class="text-center" th:text="${state.count}"></td>
+                            <td class="text-center" th:text="${login.loginDate}"></td>
+                            <td class="text-center" th:text="${login.loginHour}"></td>
+                            <td class="text-center" th:text="${login.employeeName}"></td>
+                            <td class="text-center" th:if="${(login.areaName == null)}" th:text="${'Sin asignar'}"></td>
+                            <td class="text-center" th:if="${!(login.areaName == null)}" th:text="${login.areaName}"></td>
+                            <td class="text-center" th:if="${(login.finalHour == null)}" th:text="${'No registrada'}"></td>
+                            <td class="text-center" th:if="${!(login.finalHour == null)}" th:text="${login.finalHour}"></td>
+                            <td class="text-center" th:text="${login.workedHours + ' horas y ' + #numbers.formatDecimal(login.workedMinutes,1,0) + ' minutos'}"></td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-active">
+                                <th class="text-center" colspan="4">Horas trabajadas hasta el momento =></th>
+                                <td class="text-center" colspan="3" th:text="${workedHours + ' horas y ' + #numbers.formatDecimal(workedMinutes,1,0) + ' minutos'}"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+
+                </div>
+            </div>
+            <div class="carousel-item" data-bs-interval="5000" sec:authorize="hasAnyRole('ROLE_MANAGER','ROLE_AREAHEAD')">
 
                 <div class="container text-center">
                     <h1 class="fst-italic fw-bold mb-4">Estadísticas</h1>
@@ -91,6 +135,10 @@
 
 
 <footer th:replace="layout/layout :: footer"></footer>
+<script th:src="@{/js/jquery.validate.min.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+<script th:src="@{/js/messages_es.js}"></script>
+<script th:src="@{/js/form-validation.js}"></script>
 
 </body>
 </html>
